@@ -2,11 +2,15 @@ import { Global, Module, Provider } from '@nestjs/common';
 import * as Knex from 'knex';
 import { Model } from 'objection';
 
-// import { UserModel } from './models/user.model';
+import { UserModel } from './models/user.model';
+import { WorkspaceModel } from './models/workspace.model';
+import { ItemModel } from './models/item.model';
+import { ConnectionModel } from './models/connection.model';
+import { TagModel } from './models/tag.model';
 
 import * as KnexConfig from '../../knexfile';
 
-const models = [];
+const models = [UserModel, WorkspaceModel, ItemModel, ConnectionModel, TagModel];
 
 const modelProviders = models.map(model => {
   return {
