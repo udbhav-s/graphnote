@@ -70,7 +70,7 @@ export async function up(knex: Knex): Promise<any> {
         table
           .foreign('workspace_id')
           .references('id')
-          .inTable('users')
+          .inTable('workspaces')
           .onDelete('CASCADE');
       })
       // connections table
@@ -102,6 +102,16 @@ export async function up(knex: Knex): Promise<any> {
       .createTable('tags', table => {
         table.increments();
         table.string('name').notNullable();
+        // tag workspace
+        table
+          .integer('workspace_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('workspace_id')
+          .references('id')
+          .inTable('workspaces')
+          .onDelete('CASCADE');
       })
       // connections and tags join table
       .createTable('connections_tags', table => {
