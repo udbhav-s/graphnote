@@ -6,7 +6,7 @@ export class UserModel extends BaseModel {
   static tableName = 'users';
 
   name!: string;
-  password!: string;
+  password?: string;
 
   workspaces: WorkspaceModel[];
   sharedWorkspaces: WorkspaceModel[];
