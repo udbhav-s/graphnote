@@ -143,5 +143,11 @@ export async function up(knex: Knex): Promise<any> {
 // deletes the tables
 export async function down(knex: Knex) {
   return knex.schema
+    .dropTableIfExists('connections_tags')
+    .dropTableIfExists('tags')
+    .dropTableIfExists('connections')
+    .dropTableIfExists('items')
+    .dropTableIfExists('workspaces_users')
+    .dropTableIfExists('workspaces')
     .dropTableIfExists('users');
 }
