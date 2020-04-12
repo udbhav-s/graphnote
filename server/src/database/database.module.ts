@@ -4,13 +4,14 @@ import { Model } from 'objection';
 
 import { UserModel } from './models/user.model';
 import { WorkspaceModel } from './models/workspace.model';
+import { WorkspaceUserModel } from './models/workspaceUser.model';
 import { ItemModel } from './models/item.model';
 import { ConnectionModel } from './models/connection.model';
 import { TagModel } from './models/tag.model';
 
 import * as KnexConfig from '../../knexfile';
 
-const models = [UserModel, WorkspaceModel, ItemModel, ConnectionModel, TagModel];
+const models = [UserModel, WorkspaceModel, ItemModel, ConnectionModel, TagModel, WorkspaceUserModel];
 
 const modelProviders = models.map(model => {
   return {
