@@ -2,6 +2,7 @@ import { BaseModel } from './base.model';
 import { Model } from 'objection';
 import { UserModel } from './user.model';
 import { ConnectionModel } from './connection.model';
+import { QueryBuilder } from 'objection';
 
 export class WorkspaceModel extends BaseModel {
   static tableName = 'workspaces';
@@ -13,6 +14,18 @@ export class WorkspaceModel extends BaseModel {
   user: UserModel;
   sharedUsers: UserModel[];
   connections: ConnectionModel[];
+
+  static modifiers = {
+    getUsers(query: QueryBuilder<WorkspaceModel>) {
+      query
+        .withGraphFetched('[user(fields), sharedUsers(fields)]')
+        .modifiers({
+          fields(builder) {
+            builder.select('users.id', 'users.name')
+          }
+        });
+    }
+  }
 
   static relationMappings = () => ({
     user: {

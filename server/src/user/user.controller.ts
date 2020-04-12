@@ -1,10 +1,12 @@
-import { Controller, UseGuards, Post, Body, ValidationPipe, Get, Req, BadRequestException } from '@nestjs/common';
+import { Controller, UseGuards, Post, Body, Get, Req, BadRequestException, UseInterceptors } from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginGuard } from 'src/common/guards/login.guard';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { UserModel } from 'src/database/models/user.model';
 import { SignUpDto } from './dto/signUp.dto';
+import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
 
+@UseInterceptors(FormatResponseInterceptor)
 @Controller('api/user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
