@@ -7,7 +7,7 @@ export async function up(knex: Knex): Promise<any> {
       // users table
       .createTable('users', table => {
         table.increments();
-        table.string('name').notNullable();
+        table.string('name').notNullable().unique();
         // stored as hash
         table.string('password').notNullable();
         table.timestamps(true, true);
