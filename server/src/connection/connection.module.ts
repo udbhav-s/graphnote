@@ -3,9 +3,10 @@ import { ConnectionService } from './connection.service';
 import { WorkspaceModule } from 'src/workspace/workspace.module';
 import { ConnectionController } from './connection.controller';
 import { ItemModule } from 'src/item/item.module';
+import { TagModule } from 'src/tag/tag.module';
 
 @Module({
-  imports: [WorkspaceModule, ItemModule],
+  imports: [WorkspaceModule, ItemModule, TagModule],
   providers: [ConnectionService],
   controllers: [ConnectionController]
 })

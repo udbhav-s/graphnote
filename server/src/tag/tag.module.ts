@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TagService } from './tag.service';
 
 @Module({
-  providers: [TagService]
+  providers: [TagService],
+  exports: [TagService]
 })
 export class TagModule {}

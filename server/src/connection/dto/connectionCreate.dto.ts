@@ -28,4 +28,8 @@ export class ConnectionCreateDto {
   @ValidateIf(o => !o.item2)
   @IsInt()
   item2Id: number;
+
+  @IsOptional()
+  @IsString({ each: true })
+  tags: any[]; // reassigned as relation expression by controller
 }

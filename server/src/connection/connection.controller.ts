@@ -7,6 +7,7 @@ import { ConnectionModel } from 'src/database/models/connection.model';
 import { ItemService } from 'src/item/item.service';
 import { ConnectionCreateDto } from './dto/connectionCreate.dto';
 import { ItemCreateDto } from 'src/item/dto/itemCreate.dto';
+import { TagService } from 'src/tag/tag.service';
 
 @UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
@@ -15,7 +16,8 @@ export class ConnectionController {
   constructor(
     private readonly connectionService: ConnectionService,
     private readonly workspaceService: WorkspaceService,
-    private readonly itemService: ItemService
+    private readonly itemService: ItemService,
+    private readonly tagService: TagService
   ) {}
 
   @Get('/workspace/:id')
@@ -74,6 +76,10 @@ export class ConnectionController {
       throw new ForbiddenException();
     }
 
+    if (body.tags && body.tags.length > 0) {
+      body.tags = await this.tagService.listToRelations(body.tags, item.workspaceId);
+    }
+
     return await this.connectionService.create(body);
   }
 
@@ -86,11 +92,15 @@ export class ConnectionController {
     let connection = await this.connectionService.getById(id);
     if (!connection) throw new NotFoundException();
 
-    if (!await this.workspaceService.canModify(connection.item1.workspaceId, req.user.id)) {
+    let item = await this.validateConnectionItems(body);
+
+    if (!await this.workspaceService.canModify(item.workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 
-    await this.validateConnectionItems(body);
+    if (body.tags && body.tags.length > 0) {
+      body.tags = await this.tagService.listToRelations(body.tags, item.workspaceId);
+    }
     
     return await this.connectionService.update(id, body);
   }
