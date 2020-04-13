@@ -97,6 +97,16 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('items')
           .onDelete('CASCADE');
+        // workspace
+        table
+          .integer('workspace_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('workspace_id')
+          .references('id')
+          .inTable('workspaces')
+          .onDelete('CASCADE');
       })
       // tags table
       .createTable('tags', table => {
