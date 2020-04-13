@@ -6,6 +6,7 @@ import { WorkspaceModule } from 'src/workspace/workspace.module';
 @Module({
   imports: [WorkspaceModule],
   providers: [ItemService],
-  controllers: [ItemController]
+  controllers: [ItemController],
+  exports: [ItemService]
 })
 export class ItemModule {}

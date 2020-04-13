@@ -1,4 +1,4 @@
-import { Controller, UseGuards, UseInterceptors, Get, Post, Param, Req, ForbiddenException, ParseIntPipe, NotFoundException, Body, Put, Delete } from '@nestjs/common';
+import { Controller, UseGuards, UseInterceptors, Get, Post, Param, Req, ForbiddenException, ParseIntPipe, NotFoundException, Body, Put, Delete, ValidationPipe } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
@@ -21,7 +21,7 @@ export class ItemController {
     @Req() req
   ): Promise<ItemModel[]> {
     // check if allowed
-    if (!this.workspaceService.canAccess(id, req.user.id))
+    if (!await this.workspaceService.canAccess(id, req.user.id))
       throw new ForbiddenException();
     
     // get items 
@@ -35,7 +35,7 @@ export class ItemController {
   ): Promise<ItemModel> {
     let item = await this.itemService.getById(id);
     if (!item) throw new NotFoundException();
-    if (!this.workspaceService.canAccess(item.workspaceId, req.user.id)) {
+    if (!await this.workspaceService.canAccess(item.workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 
@@ -47,7 +47,7 @@ export class ItemController {
     @Body() body: ItemCreateDto,
     @Req() req
   ): Promise<ItemModel> {
-    if (!this.workspaceService.canAccess(body.workspaceId, req.user.id)) {
+    if (!await this.workspaceService.canModify(body.workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 
@@ -57,12 +57,12 @@ export class ItemController {
   @Put('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
-    @Body() body: ItemCreateDto,
+    @Body(new ValidationPipe({ skipMissingProperties: true })) body: ItemCreateDto,
     @Req() req
   ): Promise<ItemModel> {
     let item = await this.itemService.getById(id);
     if (!item) throw new NotFoundException();
-    if (!this.workspaceService.canAccess(item.workspaceId, req.user.id)) {
+    if (!await this.workspaceService.canModify(item.workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 
@@ -76,7 +76,7 @@ export class ItemController {
   ): Promise<number> {
     let item = await this.itemService.getById(id);
     if (!item) throw new NotFoundException();
-    if (!this.workspaceService.canAccess(item.workspaceId, req.user.id)) {
+    if (!await this.workspaceService.canModify(item.workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 

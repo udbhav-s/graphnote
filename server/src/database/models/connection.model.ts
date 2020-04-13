@@ -11,23 +11,12 @@ export class ConnectionModel extends BaseModel {
   url: string;
   item1Id: number;
   item2Id: number;
-  workspaceId: number;
 
-  workspace: WorkspaceModel;
   item1: ItemModel;
   item2: ItemModel;
   tags: TagModel[];
 
   static relationMappings = () => ({
-    workspace: {
-      modelClass: WorkspaceModel,
-      relation: Model.BelongsToOneRelation,
-      join: {
-        from: 'connections.workspaceId',
-        to: 'workspaces.id'
-      }
-    },
-
     item1: {
       modelClass: ItemModel,
       relation: Model.BelongsToOneRelation,

@@ -1,8 +1,8 @@
-import { IsDefined, IsNumber, IsString } from 'class-validator';
+import { IsDefined, IsString, IsInt } from 'class-validator';
 
 export class WorkspaceUserDto {
   @IsDefined()
-  @IsNumber()
+  @IsInt()
   workspaceId: number;
 
   @IsDefined()

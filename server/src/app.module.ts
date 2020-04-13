@@ -6,9 +6,11 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
 import { WorkspaceModule } from './workspace/workspace.module';
 import { ItemModule } from './item/item.module';
+import { ConnectionModule } from './connection/connection.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
-  imports: [AuthModule, UserModule, DatabaseModule, WorkspaceModule, ItemModule],
+  imports: [AuthModule, UserModule, DatabaseModule, WorkspaceModule, ItemModule, ConnectionModule, TagModule],
   controllers: [AppController],
   providers: [AppService],
 })

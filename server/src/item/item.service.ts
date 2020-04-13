@@ -37,7 +37,6 @@ export class ItemService {
   async del(id: number): Promise<number> {
     return await this.itemModel
       .query()
-      .where({ id })
-      .del();
+      .deleteById(id);
   }
 }

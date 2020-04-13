@@ -1,4 +1,4 @@
-import { IsDefined, IsString, IsOptional, IsUrl, IsNumber } from 'class-validator';
+import { IsDefined, IsString, IsOptional, IsUrl, IsInt } from 'class-validator';
 
 export class ItemCreateDto {
   @IsDefined()
@@ -14,7 +14,6 @@ export class ItemCreateDto {
   @IsString()
   body: string;
 
-  @IsDefined()
-  @IsNumber()
+  @IsInt()
   workspaceId: number;
 }

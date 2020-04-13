@@ -74,16 +74,21 @@ export class WorkspaceService {
   async del(id: number): Promise<number> {
     return await this.workspaceModel
       .query()
-      .where({ id })
-      .del();
+      .deleteById(id);
   }
 
-  async canAccess(id: number, userId: number): Promise<boolean> {
+  async canModify(id: number, userId: number): Promise<boolean> {
     let workspace = await this.getById(id);
     if (!workspace) return false;
     return (
       workspace.userId === userId || 
       workspace.sharedUsers.some(user => user.id === userId)
     );
+  }
+
+  async canAccess(id: number, userId: number): Promise<boolean> {
+    let workspace = await this.getById(id);
+    if (!workspace) return false;
+    return (await this.canModify(id, userId)) || workspace.public;
   }
 }
