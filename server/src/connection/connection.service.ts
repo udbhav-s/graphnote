@@ -40,7 +40,7 @@ export class ConnectionService {
     return await this.connectionModel
       .query()
       .allowGraph('[item1, item2, tags]')
-      .insertGraphAndFetch(body)
+      .insertGraphAndFetch(body, { relate: true })
       .first()
       .withGraphFetched('[item1, item2, tags]');
   }
@@ -52,7 +52,7 @@ export class ConnectionService {
       .upsertGraphAndFetch({
         ...body,
         id
-      }, { unrelate: true })
+      }, { relate: true, unrelate: true })
       .first()
       .withGraphFetched('[item1, item2, tags]');
   }
