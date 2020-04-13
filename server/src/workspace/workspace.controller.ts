@@ -1,4 +1,4 @@
-import { Controller, UseInterceptors, Get, Param, Req, UseGuards, Post, Body, Put, ForbiddenException, NotFoundException, BadRequestException, Delete } from '@nestjs/common';
+import { Controller, UseInterceptors, Get, Param, Req, UseGuards, Post, Body, Put, ForbiddenException, NotFoundException, BadRequestException, Delete, ParseIntPipe } from '@nestjs/common';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
 import { WorkspaceService } from './workspace.service';
 import { WorkspaceModel } from '../database/models/workspace.model';
@@ -40,7 +40,7 @@ export class WorkspaceController {
 
   @Put('/update/:id')
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() body: WorkspaceCreateDto,
     @Req() req
   ): Promise<WorkspaceModel> {
@@ -64,11 +64,15 @@ export class WorkspaceController {
 
     // check if user exists
     let user = await this.userService.getByName(body.username);
-    if (!user) throw new NotFoundException();
+    if (!user) throw new NotFoundException("User not found");
 
     // check if workspace already shared with user
+    if (user.id === workspace.userId) {
+      throw new BadRequestException("You can't share a workspace with yourself")
+    }
     workspace.sharedUsers.forEach(user => {
-      if (user.id === workspace.userId) throw new BadRequestException();
+      if (user.id === workspace.userId) 
+        throw new BadRequestException("Workspace already shared with user");
     });
 
     // return
@@ -83,11 +87,15 @@ export class WorkspaceController {
     // validate
     let workspace = await this.workspaceService.getById(body.workspaceId);
     if (!workspace) throw new NotFoundException();
-    if (workspace.userId != req.user.id) throw new ForbiddenException();
 
     // check if user exists
     let user = await this.userService.getByName(body.username);
     if (!user) throw new NotFoundException();
+
+    // check if user can remove
+    if (workspace.userId != req.user.id && user.id != req.user.id) {
+      throw new ForbiddenException();
+    }
 
     // return
     return await this.workspaceService.removeUser(workspace.id, user.id);
@@ -95,7 +103,7 @@ export class WorkspaceController {
 
   @Delete('/:id')
   async del(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Req() req
   ): Promise<number> {
     // validate

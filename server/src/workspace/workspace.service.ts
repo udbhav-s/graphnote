@@ -77,4 +77,13 @@ export class WorkspaceService {
       .where({ id })
       .del();
   }
+
+  async canAccess(id: number, userId: number): Promise<boolean> {
+    let workspace = await this.getById(id);
+    if (!workspace) return false;
+    return (
+      workspace.userId === userId || 
+      workspace.sharedUsers.some(user => user.id === userId)
+    );
+  }
 }
