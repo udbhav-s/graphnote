@@ -1,7 +1,6 @@
 import { BaseModel } from './base.model';
 import { Model } from 'objection';
 import { UserModel } from './user.model';
-import { ConnectionModel } from './connection.model';
 import { QueryBuilder } from 'objection';
 
 export class WorkspaceModel extends BaseModel {
@@ -13,7 +12,6 @@ export class WorkspaceModel extends BaseModel {
 
   user: UserModel;
   sharedUsers: UserModel[];
-  connections: ConnectionModel[];
 
   static modifiers = {
     getUsers(query: QueryBuilder<WorkspaceModel>) {
@@ -49,14 +47,5 @@ export class WorkspaceModel extends BaseModel {
         to: 'users.id'
       }
     },
-
-    connections: {
-      modelClass: ConnectionModel,
-      relation: Model.HasManyRelation,
-      join: {
-        from: 'workspaces.id',
-        to: 'connections.workspaceId'
-      }
-    }
   });
 }
