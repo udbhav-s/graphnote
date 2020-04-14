@@ -7,7 +7,11 @@ export class BaseModel extends Model {
   readonly updatedAt: string;
 
   static modifiers = {
-    queryOptions(query: QueryBuilder<BaseModel>, options: QueryOptionsDto) {
+    queryOptions(
+      query: QueryBuilder<BaseModel>, 
+      // default sort by latest
+      options: QueryOptionsDto = { orderBy: 'createdAt', order: 'desc' }
+    ) {
       if (options.limit) query.limit(options.limit);
       if (options.offset) query.offset(options.offset);
       // order options
