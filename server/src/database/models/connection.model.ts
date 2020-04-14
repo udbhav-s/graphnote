@@ -16,6 +16,10 @@ export class ConnectionModel extends BaseModel {
   item2: ItemModel;
   tags: TagModel[];
 
+  static modifiers = {
+    ...BaseModel.modifiers
+  }
+
   static relationMappings = () => ({
     item1: {
       modelClass: ItemModel,

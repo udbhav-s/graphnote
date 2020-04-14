@@ -12,6 +12,10 @@ export class ItemModel extends BaseModel {
 
   workspace: WorkspaceModel;
 
+  static modifiers = {
+    ...BaseModel.modifiers
+  }
+
   static relationMappings = () => ({
     workspace: {
       modelClass: WorkspaceModel,

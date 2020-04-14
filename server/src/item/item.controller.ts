@@ -1,10 +1,11 @@
-import { Controller, UseGuards, UseInterceptors, Get, Post, Param, Req, ForbiddenException, ParseIntPipe, NotFoundException, Body, Put, Delete, ValidationPipe } from '@nestjs/common';
+import { Controller, UseGuards, UseInterceptors, Get, Post, Param, Req, ForbiddenException, ParseIntPipe, NotFoundException, Body, Put, Delete, ValidationPipe, Query } from '@nestjs/common';
 import { ItemService } from './item.service';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
 import { ItemModel } from 'src/database/models/item.model';
 import { WorkspaceService } from 'src/workspace/workspace.service';
 import { ItemCreateDto } from './dto/itemCreate.dto';
+import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
 
 @UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
@@ -18,6 +19,7 @@ export class ItemController {
   @Get('/workspace/:id')
   async getByWorkspace(
     @Param('id', ParseIntPipe) id: number,
+    @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
     @Req() req
   ): Promise<ItemModel[]> {
     // check if allowed
@@ -25,7 +27,7 @@ export class ItemController {
       throw new ForbiddenException();
     
     // get items 
-    return await this.itemService.getByWorkspace(id);
+    return await this.itemService.getByWorkspace(id, options);
   }
 
   @Get('/:id')

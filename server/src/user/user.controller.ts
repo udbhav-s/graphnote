@@ -17,6 +17,12 @@ export class UserController {
     return req.user.id;
   }
 
+  @UseGuards(AuthenticatedGuard)
+  @Post('/logout')
+  logout(@Req() req) {
+    return req.logout();
+  }
+
   @Post('/register')
   async register(@Body() body: SignUpDto): Promise<number> {
     // check if name exists 

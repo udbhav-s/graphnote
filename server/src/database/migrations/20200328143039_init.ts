@@ -55,6 +55,7 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('users')
           .onDelete('CASCADE');
+        table.timestamps(true, true);
       })
       // items table 
       .createTable('items', table => {
@@ -72,6 +73,7 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('workspaces')
           .onDelete('CASCADE');
+        table.timestamps(true, true);
       })
       // connections table
       .createTable('connections', table => {
@@ -97,6 +99,7 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('items')
           .onDelete('CASCADE');
+        table.timestamps(true, true);
       })
       // tags table
       .createTable('tags', table => {
@@ -112,6 +115,7 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('workspaces')
           .onDelete('CASCADE');
+        table.timestamps(true, true);
       })
       // connections and tags join table
       .createTable('connections_tags', table => {

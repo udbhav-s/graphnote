@@ -3,6 +3,7 @@ import { ModelClass } from 'objection';
 import { WorkspaceModel } from 'src/database/models/workspace.model';
 import { WorkspaceUserModel } from 'src/database/models/workspaceUser.model';
 import { WorkspaceCreateDto } from './dto/workspaceCreate.dto';
+import { GET_USERS } from 'src/database/modifiers';
 
 @Injectable()
 export class WorkspaceService {
@@ -17,14 +18,14 @@ export class WorkspaceService {
     return await this.workspaceModel
       .query()
       .findById(id)
-      .modify('getUsers');
+      .modify(GET_USERS);
   }
 
   async getByUser(userId: number): Promise<WorkspaceModel[]> {
     return await this.workspaceModel
       .query()
       .where({ userId })
-      .modify('getUsers');
+      .modify(GET_USERS);
   }
 
   async getSharedWith(userId: number): Promise<WorkspaceModel[]> {
@@ -32,7 +33,7 @@ export class WorkspaceService {
       .query()
       .joinRelated('sharedUsers')
       .where('sharedUsers.id', userId)
-      .modify('getUsers');
+      .modify(GET_USERS);
   }
 
   async create(body: WorkspaceCreateDto): Promise<WorkspaceModel> {

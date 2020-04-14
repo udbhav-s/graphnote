@@ -24,7 +24,9 @@ export class WorkspaceModel extends BaseModel {
             builder.select('users.id', 'users.name')
           }
         });
-    }
+    },
+
+    ...BaseModel.modifiers
   }
 
   static relationMappings = () => ({

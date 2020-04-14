@@ -2,7 +2,8 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ModelClass } from 'objection';
 import { ConnectionModel } from 'src/database/models/connection.model';
 import { ConnectionCreateDto } from './dto/connectionCreate.dto';
-import { TagService } from 'src/tag/tag.service';
+import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
+import { QUERY_OPTIONS } from 'src/database/modifiers';
 
 @Injectable()
 export class ConnectionService {
@@ -17,8 +18,8 @@ export class ConnectionService {
       .withGraphFetched('[item1, item2, tags]');
   }
 
-  async getByWorkspace(workspaceId: number): Promise<ConnectionModel[]> {
-    return await this.connectionModel
+  async getByWorkspace(workspaceId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
+    let query = this.connectionModel
       .query()
       .joinRelated('[item1, item2]')
       .where({
@@ -26,14 +27,22 @@ export class ConnectionService {
         'item2.workspaceId': workspaceId
       })
       .withGraphFetched('[item1, item2, tags]');
+
+    if (options) query.modify(QUERY_OPTIONS, options);
+
+    return await query;
   }
 
-  async getWithItem(itemId: number): Promise<ConnectionModel[]> {
-    return await this.connectionModel
+  async getWithItem(itemId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
+    let query = this.connectionModel
       .query()
       .where('item1Id', itemId)
       .orWhere('item2Id', itemId)
       .withGraphFetched('[item1, item2, tags]');
+
+    if (options) query.modify(QUERY_OPTIONS, options);
+
+    return await query;
   }
 
   async create(body: ConnectionCreateDto): Promise<ConnectionModel> {

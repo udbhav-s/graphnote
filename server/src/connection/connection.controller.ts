@@ -1,4 +1,4 @@
-import { Controller, UseGuards, UseInterceptors, Get, Param, ParseIntPipe, Req, ForbiddenException, NotFoundException, Body, Post, ValidationPipe, Put, Delete } from '@nestjs/common';
+import { Controller, UseGuards, UseInterceptors, Get, Param, ParseIntPipe, Req, ForbiddenException, NotFoundException, Body, Post, ValidationPipe, Put, Delete, Query } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
 import { ConnectionService } from './connection.service';
@@ -8,6 +8,7 @@ import { ItemService } from 'src/item/item.service';
 import { ConnectionCreateDto } from './dto/connectionCreate.dto';
 import { ItemCreateDto } from 'src/item/dto/itemCreate.dto';
 import { TagService } from 'src/tag/tag.service';
+import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
 
 @UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
@@ -23,18 +24,20 @@ export class ConnectionController {
   @Get('/workspace/:id')
   async getByWorkspace(
     @Param('id', ParseIntPipe) workspaceId: number,
+    @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
     @Req() req
   ): Promise<ConnectionModel[]> {
     if (!await this.workspaceService.canAccess(workspaceId, req.user.id)) {
       throw new ForbiddenException();
     }
 
-    return await this.connectionService.getByWorkspace(workspaceId);
+    return await this.connectionService.getByWorkspace(workspaceId, options);
   }
 
   @Get('/item/:id')
   async getWithItem(
     @Param('id', ParseIntPipe) itemId: number,
+    @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
     @Req() req
   ): Promise<ConnectionModel[]> {
     // check if user can access 
@@ -46,7 +49,7 @@ export class ConnectionController {
     }
 
     // get connections
-    return await this.connectionService.getWithItem(itemId);
+    return await this.connectionService.getWithItem(itemId, options);
   }
 
   @Get('/:id')
