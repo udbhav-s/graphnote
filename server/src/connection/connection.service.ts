@@ -19,30 +19,24 @@ export class ConnectionService {
   }
 
   async getByWorkspace(workspaceId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
-    let query = this.connectionModel
+    return await this.connectionModel
       .query()
       .joinRelated('[item1, item2]')
       .where({
         'item1.workspaceId': workspaceId,
         'item2.workspaceId': workspaceId
       })
-      .withGraphFetched('[item1, item2, tags]');
-
-    if (options) query.modify(QUERY_OPTIONS, options);
-
-    return await query;
+      .withGraphFetched('[item1, item2, tags]')
+      .modify(QUERY_OPTIONS, options);
   }
 
   async getWithItem(itemId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
-    let query = this.connectionModel
+    return await this.connectionModel
       .query()
       .where('item1Id', itemId)
       .orWhere('item2Id', itemId)
-      .withGraphFetched('[item1, item2, tags]');
-
-    if (options) query.modify(QUERY_OPTIONS, options);
-
-    return await query;
+      .withGraphFetched('[item1, item2, tags]')
+      .modify(QUERY_OPTIONS, options);
   }
 
   async create(body: ConnectionCreateDto): Promise<ConnectionModel> {

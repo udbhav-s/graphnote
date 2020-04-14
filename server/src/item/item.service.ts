@@ -16,11 +16,10 @@ export class ItemService {
   }
 
   async getByWorkspace(workspaceId: number, options: QueryOptionsDto): Promise<ItemModel[]> {
-    let query =  this.itemModel.query().where({ workspaceId });
-    
-    if (options) query.modify(QUERY_OPTIONS, options);
-
-    return await query;
+    return await this.itemModel
+      .query()
+      .where({ workspaceId })
+      .modify(QUERY_OPTIONS, options);
   }
 
   async create(item: ItemCreateDto): Promise<ItemModel> {
