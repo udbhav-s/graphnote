@@ -27,6 +27,17 @@ export class WorkspaceController {
     return await this.workspaceService.getSharedWith(req.user.id);
   }
 
+  @Get('/:id')
+  async getById(
+    @Param('id', ParseIntPipe) id: number,
+    @Req() req
+  ): Promise<WorkspaceModel> {
+    if (!this.workspaceService.canAccess(id, req.user.id))
+      throw new ForbiddenException();
+    
+    return await this.workspaceService.getById(id);
+  }
+
   @Post('/create')
   async create(
     @Body() body: WorkspaceCreateDto,
