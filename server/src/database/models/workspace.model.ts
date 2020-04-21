@@ -17,17 +17,15 @@ export class WorkspaceModel extends BaseModel {
 
   static modifiers = {
     getUsers(query: QueryBuilder<WorkspaceModel>) {
-      query
-        .withGraphFetched('[user(fields), sharedUsers(fields)]')
-        .modifiers({
-          fields(builder) {
-            builder.select('users.id', 'users.name')
-          }
-        });
+      query.withGraphFetched('[user(fields), sharedUsers(fields)]').modifiers({
+        fields(builder) {
+          builder.select('users.id', 'users.name');
+        },
+      });
     },
 
-    ...BaseModel.modifiers
-  }
+    ...BaseModel.modifiers,
+  };
 
   static relationMappings = () => ({
     user: {
@@ -35,8 +33,8 @@ export class WorkspaceModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'workspaces.userId',
-        to: 'users.id'
-      }
+        to: 'users.id',
+      },
     },
 
     sharedUsers: {
@@ -46,10 +44,10 @@ export class WorkspaceModel extends BaseModel {
         from: 'workspaces.id',
         through: {
           from: 'workspacesUsers.workspaceId',
-          to: 'workspacesUsers.userId'
+          to: 'workspacesUsers.userId',
         },
-        to: 'users.id'
-      }
+        to: 'users.id',
+      },
     },
 
     items: {
@@ -57,8 +55,8 @@ export class WorkspaceModel extends BaseModel {
       relation: Model.HasManyRelation,
       join: {
         from: 'workspaces.id',
-        to: 'items.workspaceId'
-      }
-    }
+        to: 'items.workspaceId',
+      },
+    },
   });
 }

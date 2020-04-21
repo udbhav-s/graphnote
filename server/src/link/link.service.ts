@@ -9,7 +9,7 @@ import { LinkScrapeDto } from './dto/linkScrape.dto';
 const metascraper = metascraperModule([
   metascraperTitleModule(),
   metascraperImageModule(),
-  metascraperDescriptionModule()
+  metascraperDescriptionModule(),
 ]);
 
 @Injectable()

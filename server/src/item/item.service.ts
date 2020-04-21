@@ -7,15 +7,16 @@ import { QUERY_OPTIONS } from 'src/database/modifiers';
 
 @Injectable()
 export class ItemService {
-  constructor(
-    @Inject('ItemModel') private itemModel: ModelClass<ItemModel> 
-  ) {}
+  constructor(@Inject('ItemModel') private itemModel: ModelClass<ItemModel>) {}
 
   async getById(id: number): Promise<ItemModel> {
     return await this.itemModel.query().findById(id);
   }
 
-  async getByWorkspace(workspaceId: number, options: QueryOptionsDto): Promise<ItemModel[]> {
+  async getByWorkspace(
+    workspaceId: number,
+    options: QueryOptionsDto,
+  ): Promise<ItemModel[]> {
     return await this.itemModel
       .query()
       .where({ workspaceId })
@@ -40,8 +41,6 @@ export class ItemService {
   }
 
   async del(id: number): Promise<number> {
-    return await this.itemModel
-      .query()
-      .deleteById(id);
+    return await this.itemModel.query().deleteById(id);
   }
 }

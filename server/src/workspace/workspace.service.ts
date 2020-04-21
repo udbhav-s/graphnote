@@ -8,10 +8,10 @@ import { GET_USERS } from 'src/database/modifiers';
 @Injectable()
 export class WorkspaceService {
   constructor(
-    @Inject('WorkspaceModel') 
+    @Inject('WorkspaceModel')
     private workspaceModel: ModelClass<WorkspaceModel>,
-    @Inject('WorkspaceUserModel') 
-    private workspaceUserModel: ModelClass<WorkspaceUserModel>
+    @Inject('WorkspaceUserModel')
+    private workspaceUserModel: ModelClass<WorkspaceUserModel>,
   ) {}
 
   async getById(id: number): Promise<WorkspaceModel> {
@@ -54,12 +54,10 @@ export class WorkspaceService {
   }
 
   async addUser(id: number, userId: number): Promise<WorkspaceUserModel> {
-    return await this.workspaceUserModel
-      .query()
-      .insert({
-        workspaceId: id,
-        userId
-      });
+    return await this.workspaceUserModel.query().insert({
+      workspaceId: id,
+      userId,
+    });
   }
 
   async removeUser(id: number, userId: number): Promise<number> {
@@ -67,28 +65,26 @@ export class WorkspaceService {
       .query()
       .where({
         workspaceId: id,
-        userId
+        userId,
       })
       .del();
   }
 
   async del(id: number): Promise<number> {
-    return await this.workspaceModel
-      .query()
-      .deleteById(id);
+    return await this.workspaceModel.query().deleteById(id);
   }
 
   async canModify(id: number, userId: number): Promise<boolean> {
-    let workspace = await this.getById(id);
+    const workspace = await this.getById(id);
     if (!workspace) return false;
     return (
-      workspace.userId === userId || 
+      workspace.userId === userId ||
       workspace.sharedUsers.some(user => user.id === userId)
     );
   }
 
   async canAccess(id: number, userId: number): Promise<boolean> {
-    let workspace = await this.getById(id);
+    const workspace = await this.getById(id);
     if (!workspace) return false;
     return (await this.canModify(id, userId)) || workspace.public;
   }

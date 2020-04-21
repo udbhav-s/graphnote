@@ -1,6 +1,7 @@
 import { BaseModel } from './base.model';
 import { Model } from 'objection';
 import { WorkspaceModel } from './workspace.model';
+import { ConnectionModel } from './connection.model';
 
 export class ItemModel extends BaseModel {
   static tableName = 'items';
@@ -10,11 +11,14 @@ export class ItemModel extends BaseModel {
   body: string;
   workspaceId: number;
 
+  // for get connected with route
+  connection: ConnectionModel;
+
   workspace: WorkspaceModel;
 
   static modifiers = {
-    ...BaseModel.modifiers
-  }
+    ...BaseModel.modifiers,
+  };
 
   static relationMappings = () => ({
     workspace: {
@@ -22,8 +26,8 @@ export class ItemModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'items.workspaceId',
-        to: 'workspaces.id'
-      }
+        to: 'workspaces.id',
+      },
     },
   });
 }

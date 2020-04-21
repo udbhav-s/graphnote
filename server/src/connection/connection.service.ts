@@ -8,7 +8,8 @@ import { QUERY_OPTIONS } from 'src/database/modifiers';
 @Injectable()
 export class ConnectionService {
   constructor(
-    @Inject('ConnectionModel') private connectionModel: ModelClass<ConnectionModel>
+    @Inject('ConnectionModel')
+    private connectionModel: ModelClass<ConnectionModel>,
   ) {}
 
   async getById(id: number): Promise<ConnectionModel> {
@@ -18,19 +19,25 @@ export class ConnectionService {
       .withGraphFetched('[item1, item2, tags]');
   }
 
-  async getByWorkspace(workspaceId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
+  async getByWorkspace(
+    workspaceId: number,
+    options: QueryOptionsDto,
+  ): Promise<ConnectionModel[]> {
     return await this.connectionModel
       .query()
       .joinRelated('[item1, item2]')
       .where({
         'item1.workspaceId': workspaceId,
-        'item2.workspaceId': workspaceId
+        'item2.workspaceId': workspaceId,
       })
       .withGraphFetched('[item1, item2, tags]')
       .modify(QUERY_OPTIONS, options);
   }
 
-  async getWithItem(itemId: number, options: QueryOptionsDto): Promise<ConnectionModel[]> {
+  async getWithItem(
+    itemId: number,
+    options: QueryOptionsDto,
+  ): Promise<ConnectionModel[]> {
     return await this.connectionModel
       .query()
       .where('item1Id', itemId)
@@ -48,21 +55,25 @@ export class ConnectionService {
       .withGraphFetched('[item1, item2, tags]');
   }
 
-  async update(id: number, body: ConnectionCreateDto): Promise<ConnectionModel> {
+  async update(
+    id: number,
+    body: ConnectionCreateDto,
+  ): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
       .allowGraph('[item1, item2, tags]')
-      .upsertGraphAndFetch({
-        ...body,
-        id
-      }, { relate: true, unrelate: true })
+      .upsertGraphAndFetch(
+        {
+          ...body,
+          id,
+        },
+        { relate: true, unrelate: true },
+      )
       .first()
       .withGraphFetched('[item1, item2, tags]');
   }
 
   async del(id: number): Promise<number> {
-    return await this.connectionModel
-      .query()
-      .deleteById(id);
+    return await this.connectionModel.query().deleteById(id);
   }
 }

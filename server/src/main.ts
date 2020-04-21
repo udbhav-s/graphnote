@@ -9,7 +9,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   // get environment variables
-  config({ path: resolve(__dirname, "../.env") });
+  config({ path: resolve(__dirname, '../.env') });
 
   const app = await NestFactory.create(AppModule);
 
@@ -25,9 +25,11 @@ async function bootstrap() {
   app.use(passport.session());
 
   // global validation
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
 
   await app.listen(3000);
 }

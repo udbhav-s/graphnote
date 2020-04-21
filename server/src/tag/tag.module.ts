@@ -7,6 +7,6 @@ import { WorkspaceModule } from 'src/workspace/workspace.module';
   imports: [WorkspaceModule],
   providers: [TagService],
   exports: [TagService],
-  controllers: [TagController]
+  controllers: [TagController],
 })
 export class TagModule {}

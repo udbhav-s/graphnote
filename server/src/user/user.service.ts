@@ -6,9 +6,7 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  constructor(
-    @Inject('UserModel') private userModel: ModelClass<UserModel>
-  ) {}
+  constructor(@Inject('UserModel') private userModel: ModelClass<UserModel>) {}
 
   async getById(id: number): Promise<UserModel> {
     return await this.userModel.query().findById(id);
@@ -22,12 +20,12 @@ export class UserService {
   }
 
   async create(body: SignUpDto): Promise<UserModel> {
-    let user = {} as any;
+    const user = {} as any;
     user.password = await bcrypt.hash(body.password, 12);
     user.name = body.username;
     return await this.userModel
       .query()
       .insert(user)
-      .returning("*");
+      .returning('*');
   }
 }

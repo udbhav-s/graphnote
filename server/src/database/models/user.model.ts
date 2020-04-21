@@ -17,8 +17,8 @@ export class UserModel extends BaseModel {
       relation: Model.HasManyRelation,
       join: {
         from: 'users.id',
-        to: 'workspaces.userId'
-      }
+        to: 'workspaces.userId',
+      },
     },
 
     sharedWorkspaces: {
@@ -28,10 +28,10 @@ export class UserModel extends BaseModel {
         from: 'users.id',
         through: {
           from: 'workspacesUsers.userId',
-          to: 'workspacesUsers.workspaceId'
+          to: 'workspacesUsers.workspaceId',
         },
-        to: 'workspaces.id'
-      }
-    }
+        to: 'workspaces.id',
+      },
+    },
   });
 }

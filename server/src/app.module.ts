@@ -11,7 +11,16 @@ import { TagModule } from './tag/tag.module';
 import { LinkModule } from './link/link.module';
 
 @Module({
-  imports: [AuthModule, UserModule, DatabaseModule, WorkspaceModule, ItemModule, ConnectionModule, TagModule, LinkModule],
+  imports: [
+    AuthModule,
+    UserModule,
+    DatabaseModule,
+    WorkspaceModule,
+    ItemModule,
+    ConnectionModule,
+    TagModule,
+    LinkModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

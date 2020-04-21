@@ -1,4 +1,4 @@
-import { IsString, IsDefined, IsInt } from "class-validator";
+import { IsString, IsDefined, IsInt } from 'class-validator';
 
 export class TagCreateDto {
   @IsDefined()

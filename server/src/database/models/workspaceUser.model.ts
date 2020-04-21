@@ -18,8 +18,8 @@ export class WorkspaceUserModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'workspacesUsers.userId',
-        to: 'users.id'
-      }
+        to: 'users.id',
+      },
     },
 
     workspace: {
@@ -27,8 +27,8 @@ export class WorkspaceUserModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'workspacesUsers.userId',
-        to: 'users.id'
-      }
+        to: 'users.id',
+      },
     },
   });
 }

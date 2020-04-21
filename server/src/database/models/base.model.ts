@@ -8,16 +8,16 @@ export class BaseModel extends Model {
 
   static modifiers = {
     queryOptions(
-      query: QueryBuilder<BaseModel>, 
-      options: QueryOptionsDto = {}
+      query: QueryBuilder<BaseModel>,
+      options: QueryOptionsDto = {},
     ) {
       if (options.limit) query.limit(options.limit);
       if (options.offset) query.offset(options.offset);
       // order options - default latest
       query.orderBy(
-        options.orderBy || 'createdAt', 
-        (options.order || 'desc') as OrderByDirection
+        options.orderBy || 'createdAt',
+        (options.order || 'desc') as OrderByDirection,
       );
     },
-  }
+  };
 }

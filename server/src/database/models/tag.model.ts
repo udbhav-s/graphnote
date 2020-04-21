@@ -18,8 +18,8 @@ export class TagModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'tags.workspaceId',
-        to: 'workspaces.id'
-      }
+        to: 'workspaces.id',
+      },
     },
 
     connections: {
@@ -29,10 +29,10 @@ export class TagModel extends BaseModel {
         from: 'tags.id',
         through: {
           from: 'connectionsTags.tagId',
-          to: 'connectionsTags.connectionId'
+          to: 'connectionsTags.connectionId',
         },
-        to: 'connections.id'
-      }
-    }
+        to: 'connections.id',
+      },
+    },
   });
 }

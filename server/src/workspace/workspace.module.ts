@@ -7,6 +7,6 @@ import { UserModule } from 'src/user/user.module';
   imports: [UserModule],
   providers: [WorkspaceService],
   controllers: [WorkspaceController],
-  exports: [WorkspaceService]
+  exports: [WorkspaceService],
 })
 export class WorkspaceModule {}

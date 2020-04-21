@@ -1,6 +1,5 @@
 import { BaseModel } from './base.model';
 import { Model } from 'objection';
-import { WorkspaceModel } from './workspace.model';
 import { ItemModel } from './item.model';
 import { TagModel } from './tag.model';
 
@@ -12,13 +11,13 @@ export class ConnectionModel extends BaseModel {
   item1Id: number;
   item2Id: number;
 
-  item1: ItemModel;
-  item2: ItemModel;
-  tags: TagModel[];
+  item1?: ItemModel;
+  item2?: ItemModel;
+  tags?: TagModel[];
 
   static modifiers = {
-    ...BaseModel.modifiers
-  }
+    ...BaseModel.modifiers,
+  };
 
   static relationMappings = () => ({
     item1: {
@@ -26,8 +25,8 @@ export class ConnectionModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'connections.item1Id',
-        to: 'items.id'
-      }
+        to: 'items.id',
+      },
     },
 
     item2: {
@@ -35,8 +34,8 @@ export class ConnectionModel extends BaseModel {
       relation: Model.BelongsToOneRelation,
       join: {
         from: 'connections.item2Id',
-        to: 'items.id'
-      }
+        to: 'items.id',
+      },
     },
 
     tags: {
@@ -46,10 +45,10 @@ export class ConnectionModel extends BaseModel {
         from: 'connections.id',
         through: {
           from: 'connectionsTags.connectionId',
-          to: 'connectionsTags.tagId'
+          to: 'connectionsTags.tagId',
         },
-        to: 'tags.id'
-      }
-    }
+        to: 'tags.id',
+      },
+    },
   });
 }

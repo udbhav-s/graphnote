@@ -7,7 +7,10 @@ export async function up(knex: Knex): Promise<any> {
       // users table
       .createTable('users', table => {
         table.increments();
-        table.string('name').notNullable().unique();
+        table
+          .string('name')
+          .notNullable()
+          .unique();
         // stored as hash
         table.string('password').notNullable();
         table.timestamps(true, true);
@@ -35,7 +38,7 @@ export async function up(knex: Knex): Promise<any> {
       // join table for additional workspace users
       .createTable('workspaces_users', table => {
         table.increments();
-        // workspace 
+        // workspace
         table
           .integer('workspace_id')
           .unsigned()
@@ -57,7 +60,7 @@ export async function up(knex: Knex): Promise<any> {
           .onDelete('CASCADE');
         table.timestamps(true, true);
       })
-      // items table 
+      // items table
       .createTable('items', table => {
         table.increments();
         table.string('name').notNullable();
@@ -120,7 +123,7 @@ export async function up(knex: Knex): Promise<any> {
       // connections and tags join table
       .createTable('connections_tags', table => {
         table.increments();
-        // connection 
+        // connection
         table
           .integer('connection_id')
           .unsigned()

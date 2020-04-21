@@ -1,4 +1,13 @@
-import { Controller, UseGuards, Post, Body, Get, Req, BadRequestException, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Post,
+  Body,
+  Get,
+  Req,
+  BadRequestException,
+  UseInterceptors,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { LoginGuard } from 'src/common/guards/login.guard';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
@@ -25,18 +34,19 @@ export class UserController {
 
   @Post('/register')
   async register(@Body() body: SignUpDto): Promise<number> {
-    // check if name exists 
-    let user = await this.userService.getByName(body.username);
-    if (user) throw new BadRequestException("User already exists");
+    // check if name exists
+    const user = await this.userService.getByName(body.username);
+    if (user) throw new BadRequestException('User already exists');
     // register
-    let { id } = await this.userService.create(body);
+    const { id } = await this.userService.create(body);
     return id;
   }
 
   @UseGuards(AuthenticatedGuard)
   @Get('/current')
   async getCurrent(@Req() req): Promise<UserModel> {
-    let { password, ...result } = await this.userService.getById(req.user.id);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...result } = await this.userService.getById(req.user.id);
     return result as UserModel;
   }
 }

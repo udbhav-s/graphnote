@@ -5,9 +5,7 @@ import { TagCreateDto } from './dto/tagCreate.dto';
 
 @Injectable()
 export class TagService {
-  constructor(
-    @Inject('TagModel') private tagModel: ModelClass<TagModel>
-  ) {}
+  constructor(@Inject('TagModel') private tagModel: ModelClass<TagModel>) {}
 
   async getById(id: number): Promise<TagModel> {
     return await this.tagModel.query().findById(id);
@@ -38,12 +36,12 @@ export class TagService {
   }
 
   async listToRelations(tags: string[], workspaceId: number): Promise<any> {
-    let existingTags = await this.tagModel
+    const existingTags = await this.tagModel
       .query()
       .whereIn('name', tags)
       .andWhere({ workspaceId });
-    let tagList = tags.map(name => {
-      let tag = existingTags.find(t => t.name === name);
+    const tagList = tags.map(name => {
+      const tag = existingTags.find(t => t.name === name);
       if (tag) return { id: tag.id };
       else return { name, workspaceId };
     });

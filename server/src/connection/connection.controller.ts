@@ -1,4 +1,20 @@
-import { Controller, UseGuards, UseInterceptors, Get, Param, ParseIntPipe, Req, ForbiddenException, NotFoundException, Body, Post, ValidationPipe, Put, Delete, Query } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  UseInterceptors,
+  Get,
+  Param,
+  ParseIntPipe,
+  Req,
+  ForbiddenException,
+  NotFoundException,
+  Body,
+  Post,
+  ValidationPipe,
+  Put,
+  Delete,
+  Query,
+} from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
 import { ConnectionService } from './connection.service';
@@ -18,16 +34,16 @@ export class ConnectionController {
     private readonly connectionService: ConnectionService,
     private readonly workspaceService: WorkspaceService,
     private readonly itemService: ItemService,
-    private readonly tagService: TagService
+    private readonly tagService: TagService,
   ) {}
 
   @Get('/workspace/:id')
   async getByWorkspace(
     @Param('id', ParseIntPipe) workspaceId: number,
     @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
-    @Req() req
+    @Req() req,
   ): Promise<ConnectionModel[]> {
-    if (!await this.workspaceService.canAccess(workspaceId, req.user.id)) {
+    if (!(await this.workspaceService.canAccess(workspaceId, req.user.id))) {
       throw new ForbiddenException();
     }
 
@@ -38,13 +54,15 @@ export class ConnectionController {
   async getWithItem(
     @Param('id', ParseIntPipe) itemId: number,
     @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
-    @Req() req
+    @Req() req,
   ): Promise<ConnectionModel[]> {
-    // check if user can access 
-    let item = await this.itemService.getById(itemId);
+    // check if user can access
+    const item = await this.itemService.getById(itemId);
     if (!item) throw new NotFoundException();
 
-    if (!await this.workspaceService.canAccess(item.workspaceId, req.user.id)) {
+    if (
+      !(await this.workspaceService.canAccess(item.workspaceId, req.user.id))
+    ) {
       throw new ForbiddenException();
     }
 
@@ -55,13 +73,18 @@ export class ConnectionController {
   @Get('/:id')
   async getById(
     @Param('id', ParseIntPipe) id: number,
-    @Req() req
+    @Req() req,
   ): Promise<ConnectionModel> {
-    // check if user can access 
-    let connection = await this.connectionService.getById(id);
+    // check if user can access
+    const connection = await this.connectionService.getById(id);
     if (!connection) throw new NotFoundException();
 
-    if (!await this.workspaceService.canAccess(connection.item1.workspaceId, req.user.id)) {
+    if (
+      !(await this.workspaceService.canAccess(
+        connection.item1.workspaceId,
+        req.user.id,
+      ))
+    ) {
       throw new ForbiddenException();
     }
 
@@ -71,16 +94,21 @@ export class ConnectionController {
   @Post('/create')
   async create(
     @Body(new ValidationPipe({ transform: true })) body: ConnectionCreateDto,
-    @Req() req
+    @Req() req,
   ): Promise<ConnectionModel> {
-    let item = await this.validateConnectionItems(body);
+    const item = await this.validateConnectionItems(body);
 
-    if (!await this.workspaceService.canModify(item.workspaceId, req.user.id)) {
+    if (
+      !(await this.workspaceService.canModify(item.workspaceId, req.user.id))
+    ) {
       throw new ForbiddenException();
     }
 
     if (body.tags && body.tags.length > 0) {
-      body.tags = await this.tagService.listToRelations(body.tags, item.workspaceId);
+      body.tags = await this.tagService.listToRelations(
+        body.tags,
+        item.workspaceId,
+      );
     }
 
     return await this.connectionService.create(body);
@@ -90,41 +118,53 @@ export class ConnectionController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body(new ValidationPipe({ transform: true })) body: ConnectionCreateDto,
-    @Req() req
+    @Req() req,
   ): Promise<ConnectionModel> {
-    let connection = await this.connectionService.getById(id);
+    const connection = await this.connectionService.getById(id);
     if (!connection) throw new NotFoundException();
 
-    let item = await this.validateConnectionItems(body);
+    const item = await this.validateConnectionItems(body);
 
-    if (!await this.workspaceService.canModify(item.workspaceId, req.user.id)) {
+    if (
+      !(await this.workspaceService.canModify(item.workspaceId, req.user.id))
+    ) {
       throw new ForbiddenException();
     }
 
     if (body.tags && body.tags.length > 0) {
-      body.tags = await this.tagService.listToRelations(body.tags, item.workspaceId);
+      body.tags = await this.tagService.listToRelations(
+        body.tags,
+        item.workspaceId,
+      );
     }
-    
+
     return await this.connectionService.update(id, body);
   }
 
   @Delete('/:id')
   async del(
     @Param('id', ParseIntPipe) id: number,
-    @Req() req
+    @Req() req,
   ): Promise<number> {
-    let connection = await this.connectionService.getById(id);
+    const connection = await this.connectionService.getById(id);
     if (!connection) throw new NotFoundException();
 
-    if (!await this.workspaceService.canModify(connection.item1.workspaceId, req.user.id)) {
+    if (
+      !(await this.workspaceService.canModify(
+        connection.item1.workspaceId,
+        req.user.id,
+      ))
+    ) {
       throw new ForbiddenException();
     }
-    
+
     return await this.connectionService.del(id);
   }
 
   // util
-  async validateConnectionItems(body: ConnectionCreateDto): Promise<ItemCreateDto> {
+  async validateConnectionItems(
+    body: ConnectionCreateDto,
+  ): Promise<ItemCreateDto> {
     let { item1, item2 } = body;
     if (body.item1Id) {
       item1 = await this.itemService.getById(body.item1Id);
@@ -135,8 +175,7 @@ export class ConnectionController {
       if (!item2) throw new NotFoundException();
     }
 
-    if (item1.workspaceId !== item2.workspaceId) 
-      throw new ForbiddenException();
+    if (item1.workspaceId !== item2.workspaceId) throw new ForbiddenException();
 
     return item1;
   }

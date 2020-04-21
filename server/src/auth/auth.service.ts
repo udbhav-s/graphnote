@@ -5,22 +5,21 @@ import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly userService: UserService) {}
 
   async validateUser(
     username: string,
-    password: string
+    password: string,
   ): Promise<UserModel | null> {
     // get user
-    let user = await this.userService.getByName(username);
+    const user = await this.userService.getByName(username);
     // check if user exists
     if (!user) return null;
     // compare password hash
-    let match = await bcrypt.compare(password, user.password);
+    const match = await bcrypt.compare(password, user.password);
     if (match) {
       // strip password and return
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result as UserModel;
     }

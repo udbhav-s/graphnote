@@ -11,7 +11,14 @@ import { TagModel } from './models/tag.model';
 
 import * as KnexConfig from '../../knexfile';
 
-const models = [UserModel, WorkspaceModel, ItemModel, ConnectionModel, TagModel, WorkspaceUserModel];
+const models = [
+  UserModel,
+  WorkspaceModel,
+  ItemModel,
+  ConnectionModel,
+  TagModel,
+  WorkspaceUserModel,
+];
 
 const modelProviders = models.map(model => {
   return {
