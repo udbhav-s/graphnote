@@ -1,0 +1,47 @@
+.item-preview {
+  animation: bounce ease-out 0.3s;
+
+  .item-preview-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .image {
+      justify-self: flex-start;
+      min-width: 30%;
+      max-width: 80%;
+      margin-bottom: 1rem;
+
+      img {
+        width: 100%;
+      }
+    }
+
+    .preview-content {
+      margin: auto;
+
+      .title {
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+    }
+
+    @include tablet {
+      flex-direction: row;
+      
+      .preview-content {
+        padding-left: 1rem;
+      }
+
+      .image {
+        min-width: 20%;
+        max-width: 30%;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .loading {
+    height: 200px;
+  }
+}

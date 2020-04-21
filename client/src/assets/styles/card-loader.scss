@@ -1,0 +1,22 @@
+.loading {
+  animation-duration: 1.8s !important;
+  animation-fill-mode: forwards !important;
+  animation-iteration-count: infinite !important;
+  animation-name: shine !important;
+  animation-timing-function: linear !important;
+  background: #f6f7f8;
+  background: linear-gradient(to right, #eee 8%, #ddd 38%, #eee 54%) !important;
+  background-size: 1000px 640px !important;
+  
+  position: relative;
+  
+}
+
+@keyframes shine{
+  0%{
+      background-position: -468px 0
+  }
+  100%{
+      background-position: 468px 0
+  }
+}

@@ -1,14 +1,18 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div>
+    <h1 class="title">Workspaces</h1>
+    <workspace-list />
   </div>
 </template>
 
-<script>
-import { defineComponent } from "@vue/composition-api"
+<script lang="ts">
+import { defineComponent } from "@vue/composition-api";
+import WorkspaceList from "@/components/workspace/WorkspaceList.vue";
 
 export default defineComponent({
   name: "Home",
+  components: {
+    WorkspaceList
+  }
 });
 </script>
