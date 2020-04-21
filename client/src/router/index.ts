@@ -53,6 +53,18 @@ const routes: Array<RouteConfig> = [
           )
       }
     ]
+  },
+  {
+    path: "/item/:id",
+    name: "Item",
+    props: (route) => ({
+      id: parseInt(route.params.id)
+    }),
+    component:
+      () => import(
+        /* webpackChunkName: "item" */ 
+        "@/components/item/Item.vue"
+      )
   }
 ];
 

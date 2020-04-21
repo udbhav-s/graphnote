@@ -1,5 +1,5 @@
 <template>
-  <div class="section fixed-column">
+  <div>
     <h1 class="title">Connections</h1>
     <connection-preview
       v-for="connection in connections"

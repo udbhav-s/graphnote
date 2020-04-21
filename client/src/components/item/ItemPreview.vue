@@ -1,6 +1,16 @@
 <template>
-  <div>
-    <router-link to="/" class="box item-preview">
+  <div class="item-preview-container">
+    <div
+      v-if="item.connection"
+      class="box connection-name has-background-white-ter"
+    >
+      {{ item.connection.name }}
+    </div>
+
+    <router-link
+      :to="{ name: 'Item', params: { id: item.id } }"
+      class="box item-preview"
+    >
       <h1 class="title is-5">{{ item.name }}</h1>
 
       <template v-if="item.url">
@@ -24,8 +34,8 @@
     </router-link>
 
     <connection-meta
-      v-if="props.connection && props.connection.url"
-      :connection="props.connection"
+      v-if="item.connection && item.connection.url"
+      :connection="item.connection"
     />
   </div>
 </template>

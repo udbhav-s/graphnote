@@ -2,7 +2,9 @@
   <section v-if="workspace">
     <div class="container">
       <h1 class="title">{{ workspace.name }}</h1>
-      <router-view />
+      <div class="section fixed-column">
+        <router-view />
+      </div>
     </div>
   </section>
 </template>

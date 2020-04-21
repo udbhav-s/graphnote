@@ -2,10 +2,6 @@
   text-align: center;
   margin-bottom: 2rem;
 
-  .box.connection-name {
-    padding: 0.8rem;
-  }
-
   .items {
     display: flex;
     flex-direction: column;
@@ -77,6 +73,10 @@
       flex-direction: column;
     }
   }
+}
+
+.box.connection-name {
+  padding: 0.8rem;
 }
 
 .connection-meta-container {

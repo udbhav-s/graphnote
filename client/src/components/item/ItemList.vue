@@ -1,12 +1,20 @@
 <template>
-  <div class="section fixed-column">
-    <h1 class="title">Items</h1>
+  <div>
+    <h1 class="title">
+      <template v-if="connectedWithItem">
+        Connected Items
+      </template>
+      <template v-else>
+        Items
+      </template>
+    </h1>
+
     <item-preview v-for="item in items" :key="item.id" :item="item" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, watch } from "@vue/composition-api";
 import ItemPreview from "@/components/item/ItemPreview.vue";
 import { Item } from "@/types/item";
 import { itemService } from "@/services/dataService";
@@ -49,6 +57,18 @@ export default defineComponent({
     };
 
     loadItems();
+
+    // watch for change
+    watch(
+      () => props.connectedWithItem,
+      () => {
+        // reset pagination
+        options.limit = 20;
+        options.offset = 0;
+        // reload items
+        loadItems();
+      }
+    );
 
     return {
       items,

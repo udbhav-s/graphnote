@@ -5,7 +5,10 @@
     </div>
 
     <div class="items">
-      <router-link to="/" class="item box first">
+      <router-link
+        :to="{ name: 'Item', params: { id: connection.item1.id } }"
+        class="item box first"
+      >
         <h2 class="title is-4 item-name">{{ connection.item1.name }}</h2>
         <template v-if="connection.item1.url">
           <template v-if="item1Meta">
@@ -24,7 +27,10 @@
         </template>
       </router-link>
 
-      <router-link to="/" class="item box second">
+      <router-link
+        :to="{ name: 'Item', params: { id: connection.item2.id } }"
+        class="item box second"
+      >
         <h2 class="title is-4 item-name">{{ connection.item2.name }}</h2>
         <template v-if="connection.item2.url">
           <template v-if="item2Meta">
@@ -52,7 +58,7 @@
 import { defineComponent, ref } from "@vue/composition-api";
 import { Connection } from "@/types/connection";
 import { linkService } from "@/services/dataService";
-import { LinkScrape } from "@/types/linkScrape";
+import { Metadata } from "@/types/metadata";
 import ConnectionMeta from "@/components/connection/ConnectionMeta.vue";
 
 export default defineComponent({
@@ -68,8 +74,8 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const item1Meta = ref<LinkScrape>(null);
-    const item2Meta = ref<LinkScrape>(null);
+    const item1Meta = ref<Metadata>(null);
+    const item2Meta = ref<Metadata>(null);
 
     const item1Url = props.connection.item1.url;
     if (item1Url) {

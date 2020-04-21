@@ -59,6 +59,9 @@ export const connectionService = {
 }
 
 export const itemService = {
+  getById(id: number) {
+    return api.get<ApiResponse<Item>>(`/item/${id}`);
+  },
   getByWorkspace(workspaceId: number, options?: QueryOptions) {
     return api.get<ApiResponse<Item[]>>(
       `/item/workspace/${workspaceId}`,

@@ -1,5 +1,21 @@
+.item-preview-container {
+  margin-bottom: 2rem;
+
+  .box {
+    margin-bottom: 0;
+  }
+}
+
 .item-preview {
   animation: bounce ease-out 0.3s;
+
+  // override bulma bottom margins
+  &:not(:last-child) {
+    margin-bottom: 0;
+  }
+  .title:not(:last-child) {
+    margin-bottom: 1rem;
+  }
 
   .item-preview-meta {
     display: flex;
