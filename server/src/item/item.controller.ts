@@ -24,6 +24,9 @@ import { ItemCreateDto } from './dto/itemCreate.dto';
 import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
 import { ConnectionService } from 'src/connection/connection.service';
 import { ConnectionModel } from 'src/database/models/connection.model';
+import * as sanitizeHtml from 'sanitize-html';
+import sanitizeHtmlOptions from '../common/util/sanitizeHtmlOptions';
+
 
 @UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
@@ -99,6 +102,10 @@ export class ItemController {
       throw new ForbiddenException();
     }
 
+    if (body.body) {
+      body.body = sanitizeHtml(body.body, sanitizeHtmlOptions);
+    }
+
     return await this.itemService.create(body);
   }
 
@@ -115,6 +122,10 @@ export class ItemController {
       !(await this.workspaceService.canModify(item.workspaceId, req.user.id))
     ) {
       throw new ForbiddenException();
+    }
+
+    if (body.body) {
+      body.body = sanitizeHtml(body.body, sanitizeHtmlOptions);
     }
 
     return await this.itemService.update(id, body);
