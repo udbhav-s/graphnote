@@ -49,7 +49,7 @@ export class ConnectionService {
   async create(body: ConnectionCreateDto): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
-      .allowGraph('[item1, item2, tags]')
+      .allowGraph('[tags]')
       .insertGraphAndFetch(body, { relate: true })
       .first()
       .withGraphFetched('[item1, item2, tags]');
@@ -61,7 +61,7 @@ export class ConnectionService {
   ): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
-      .allowGraph('[item1, item2, tags]')
+      .allowGraph('[tags]')
       .upsertGraphAndFetch(
         {
           ...body,

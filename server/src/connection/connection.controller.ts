@@ -14,6 +14,7 @@ import {
   Put,
   Delete,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
 import { FormatResponseInterceptor } from 'src/common/interceptors/formatResponse.interceptor';
@@ -165,7 +166,7 @@ export class ConnectionController {
   async validateConnectionItems(
     body: ConnectionCreateDto,
   ): Promise<ItemCreateDto> {
-    let { item1, item2 } = body;
+    let item1, item2;
     if (body.item1Id) {
       item1 = await this.itemService.getById(body.item1Id);
       if (!item1) throw new NotFoundException();
@@ -175,7 +176,7 @@ export class ConnectionController {
       if (!item2) throw new NotFoundException();
     }
 
-    if (item1.workspaceId !== item2.workspaceId) throw new ForbiddenException();
+    if (item1.workspaceId !== item2.workspaceId) throw new BadRequestException();
 
     return item1;
   }
