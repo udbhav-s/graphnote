@@ -64,7 +64,6 @@ export async function up(knex: Knex): Promise<any> {
       .createTable('items', table => {
         table.increments();
         table.string('name').notNullable();
-        table.string('url');
         table.text('body');
         // item workspace
         table
@@ -82,7 +81,6 @@ export async function up(knex: Knex): Promise<any> {
       .createTable('connections', table => {
         table.increments();
         table.string('name');
-        table.string('url');
         // the connection items
         table
           .integer('item1_id')
