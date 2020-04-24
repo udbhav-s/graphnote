@@ -104,6 +104,62 @@ export async function up(knex: Knex): Promise<any> {
           .onDelete('CASCADE');
         table.timestamps(true, true);
       })
+      // metadata table
+      .createTable('metadata', table => {
+        table.increments();
+        table.string('url').notNullable().unique();
+        table.string('title');
+        table.string('description');
+        table.string('image'); // image url
+      })
+      // items metadata join table
+      .createTable('items_metadata', table => {
+        table.increments();
+        // item
+        table
+          .integer('item_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('item_id')
+          .references('id')
+          .inTable('items')
+          .onDelete('CASCADE');
+        // metadata
+        table
+          .integer('metadata_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('metadata_id')
+          .references('id')
+          .inTable('metadata')
+          .onDelete('CASCADE');
+      })
+      // connections metadata join table
+      .createTable('connections_metadata', table => {
+        table.increments();
+        // connection
+        table
+          .integer('connection_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('connection_id')
+          .references('id')
+          .inTable('connections')
+          .onDelete('CASCADE');
+        // metadata
+        table
+          .integer('metadata_id')
+          .unsigned()
+          .notNullable();
+        table
+          .foreign('metadata_id')
+          .references('id')
+          .inTable('metadata')
+          .onDelete('CASCADE');
+      })
       // tags table
       .createTable('tags', table => {
         table.increments();
@@ -152,6 +208,9 @@ export async function down(knex: Knex) {
   return knex.schema
     .dropTableIfExists('connections_tags')
     .dropTableIfExists('tags')
+    .dropTableIfExists('connections_metadata')
+    .dropTableIfExists('items_metadata')
+    .dropTableIfExists('metadata')
     .dropTableIfExists('connections')
     .dropTableIfExists('items')
     .dropTableIfExists('workspaces_users')
