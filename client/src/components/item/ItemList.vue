@@ -4,12 +4,16 @@
       <template v-if="connectedWithItem">
         Connected Items
       </template>
-      <template v-else>
-        Items
-      </template>
+      <template v-else> Items </template>
     </h1>
 
     <item-preview v-for="item in items" :key="item.id" :item="item" />
+
+    <div class="field has-text-centered">
+      <button v-if="hasMoreItems" @click="loadItems" class="button is-primary">
+        Load More
+      </button>
+    </div>
   </div>
 </template>
 
@@ -33,12 +37,13 @@ export default defineComponent({
 
   setup(props, { root }) {
     const workspaceId = parseInt(root.$route.params.workspaceId);
-    const items = ref<Item[]>(null);
+    const items = ref<Item[]>([]);
     // pagination
     const options: QueryOptions = {
       limit: 20,
       offset: 0
     };
+    const hasMoreItems = ref<boolean>(true);
 
     const loadItems = async () => {
       // get connections
@@ -53,7 +58,15 @@ export default defineComponent({
       if ("error" in result) {
         root.$toasted.error("Error loading items");
         console.log(result.error);
-      } else items.value = result.data;
+      } else {
+        console.log("items", items);
+        // add items
+        result.data.forEach(item => items.value.push(item));
+        console.log("added", items);
+        // update pagination
+        if (result.data.length < options.limit) hasMoreItems.value = false;
+        options.offset += options.limit;
+      }
     };
 
     loadItems();
@@ -61,18 +74,23 @@ export default defineComponent({
     // watch for change
     watch(
       () => props.connectedWithItem,
-      () => {
-        // reset pagination
-        options.limit = 20;
-        options.offset = 0;
-        // reload items
-        loadItems();
+      (old, changed) => {
+        if (old != changed) {
+          console.log("reloading");
+          // reset pagination
+          options.limit = 20;
+          options.offset = 0;
+          // reload items
+          items.value = [];
+          loadItems();
+        }
       }
     );
 
     return {
       items,
-      loadItems
+      loadItems,
+      hasMoreItems
     };
   }
 });

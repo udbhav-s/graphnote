@@ -27,6 +27,7 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/workspace/:workspaceId",
+    meta: { requiresAuth: true },
     component: () =>
       import(/* webpackChunkName: "workspace" */ "@/views/Workspace.vue"),
     props: (route) => ({
@@ -51,12 +52,36 @@ const routes: Array<RouteConfig> = [
             /* webpackChunkName: "itemList" */ 
             "@/components/item/ItemList.vue"
           )
+      },
+      {
+        path: "item/create",
+        name: "CreateItem",
+        component: 
+          () => import(
+            /* webpackChunkName: "itemEditor" */ 
+            "@/components/item/ItemEditor.vue"
+          ),
+        props: () => ({ redirect: true })
+      },
+      {
+        path: "item/edit/:id",
+        name: "EditItem",
+        component: 
+          () => import(
+            /* webpackChunkName: "itemEditor" */ 
+            "@/components/item/ItemEditor.vue"
+          ),
+        props: (route) => ({
+          editId: parseInt(route.params.id),
+          redirect: true
+        })
       }
     ]
   },
   {
     path: "/item/:id",
     name: "Item",
+    meta: { requiresAuth: true },
     props: (route) => ({
       id: parseInt(route.params.id)
     }),

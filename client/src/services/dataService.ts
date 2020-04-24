@@ -9,7 +9,12 @@ import { Metadata } from '@/types/metadata';
 import { Item } from '@/types/item';
 
 api.interceptors.response.use(
-  res => res.data
+  res => res.data,
+  // error 
+  res => {
+    console.log({...res});
+    return res;
+  }
 );
 
 export const userService = {
@@ -72,6 +77,18 @@ export const itemService = {
     return api.get<ApiResponse<Item[]>>(
       `/item/connected/${id}`,
       { params: options }
+    )
+  },
+  create(body: Partial<Item>) {
+    return api.post<ApiResponse<Item>>(
+      "/item/create",
+      body
+    )
+  },
+  update(id: number, body: Partial<Item>) {
+    return api.put<ApiResponse<Item>>(
+      `item/update/${id}`,
+      body
     )
   }
 }

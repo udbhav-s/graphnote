@@ -32,11 +32,13 @@ export default defineComponent({
     const workspaces = ref<Workspace[]>(null);
 
     const loadWorkspaces = async () => {
+      console.log("load workspaces called");
       let result;
       // get workspaces shared with user
       if (props.sharedWith) result = await workspaceService.getSharedWith();
       // default - get user's workspaces
       else result = await workspaceService.getByUser();
+      console.log("loaded");
       // set workspaces
       if ("error" in result) {
         root.$toasted.error("Error loading workspaces");
