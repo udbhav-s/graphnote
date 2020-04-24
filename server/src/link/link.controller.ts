@@ -4,6 +4,7 @@ import {
   Query,
   UseGuards,
   UseInterceptors,
+  BadRequestException,
 } from '@nestjs/common';
 import { LinkService } from './link.service';
 import { AuthenticatedGuard } from 'src/common/guards/authenticated.guard';
@@ -18,6 +19,11 @@ export class LinkController {
 
   @Get()
   async scrape(@Query('url') url: string): Promise<LinkScrapeDto> {
-    return await this.linkService.scrape(url);
+    try {
+      return await this.linkService.scrape(url);
+    }
+    catch (err) {
+      throw new BadRequestException("Invalid URL");
+    }
   }
 }
