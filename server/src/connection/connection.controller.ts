@@ -26,6 +26,7 @@ import { ConnectionCreateDto } from './dto/connectionCreate.dto';
 import { ItemCreateDto } from 'src/item/dto/itemCreate.dto';
 import { TagService } from 'src/tag/tag.service';
 import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 @UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
@@ -36,6 +37,7 @@ export class ConnectionController {
     private readonly workspaceService: WorkspaceService,
     private readonly itemService: ItemService,
     private readonly tagService: TagService,
+    private readonly metadataService: MetadataService
   ) {}
 
   @Get('/workspace/:id')
@@ -112,6 +114,17 @@ export class ConnectionController {
       );
     }
 
+    if (body.url) {
+      let metadata = await this.metadataService.getByUrl(body.url);
+      if (!metadata) {
+        metadata = await this.metadataService.create(body.url);
+      }
+      // remove property
+      delete body.url;
+      // set metadata id
+      body.metadataId = metadata.id;
+    }
+
     return await this.connectionService.create(body);
   }
 
@@ -137,6 +150,17 @@ export class ConnectionController {
         body.tags,
         item.workspaceId,
       );
+    }
+
+    if (body.url) {
+      let metadata = await this.metadataService.getByUrl(body.url);
+      if (!metadata) {
+        metadata = await this.metadataService.create(body.url);
+      }
+      // remove property
+      delete body.url;
+      // set metadata id
+      body.metadataId = metadata.id;
     }
 
     return await this.connectionService.update(id, body);

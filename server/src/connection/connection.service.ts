@@ -10,13 +10,17 @@ export class ConnectionService {
   constructor(
     @Inject('ConnectionModel')
     private connectionModel: ModelClass<ConnectionModel>,
-  ) {}
+  ) {
+    this.fetchGraph = '[item1.metadata, item2.metadata, tags, metadata]';
+  }
+
+  fetchGraph: string;
 
   async getById(id: number): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
       .findById(id)
-      .withGraphFetched('[item1, item2, tags]');
+      .withGraphFetched(this.fetchGraph);
   }
 
   async getByWorkspace(
@@ -30,7 +34,7 @@ export class ConnectionService {
         'item1.workspaceId': workspaceId,
         'item2.workspaceId': workspaceId,
       })
-      .withGraphFetched('[item1, item2, tags]')
+      .withGraphFetched(this.fetchGraph)
       .modify(QUERY_OPTIONS, options);
   }
 
@@ -42,17 +46,16 @@ export class ConnectionService {
       .query()
       .where('item1Id', itemId)
       .orWhere('item2Id', itemId)
-      .withGraphFetched('[item1, item2, tags]')
+      .withGraphFetched(this.fetchGraph)
       .modify(QUERY_OPTIONS, options);
   }
 
   async create(body: ConnectionCreateDto): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
-      .allowGraph('[tags]')
       .insertGraphAndFetch(body, { relate: true })
       .first()
-      .withGraphFetched('[item1, item2, tags]');
+      .withGraphFetched(this.fetchGraph);
   }
 
   async update(
@@ -61,7 +64,6 @@ export class ConnectionService {
   ): Promise<ConnectionModel> {
     return await this.connectionModel
       .query()
-      .allowGraph('[tags]')
       .upsertGraphAndFetch(
         {
           ...body,
@@ -70,7 +72,7 @@ export class ConnectionService {
         { relate: true, unrelate: true },
       )
       .first()
-      .withGraphFetched('[item1, item2, tags]');
+      .withGraphFetched(this.fetchGraph);
   }
 
   async del(id: number): Promise<number> {

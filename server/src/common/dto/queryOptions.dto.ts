@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsOptional } from 'class-validator';
+import { IsEnum, IsInt, IsOptional, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class QueryOptionsDto {
@@ -20,4 +20,8 @@ export class QueryOptionsDto {
   @IsInt()
   @Transform(val => parseInt(val))
   offset?: number;
+
+  @IsOptional()
+  @IsString()
+  search?: string;
 }

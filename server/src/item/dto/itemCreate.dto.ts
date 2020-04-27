@@ -16,4 +16,6 @@ export class ItemCreateDto {
 
   @IsInt()
   workspaceId: number;
+
+  metadataId: number;
 }

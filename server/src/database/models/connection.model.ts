@@ -2,18 +2,19 @@ import { BaseModel } from './base.model';
 import { Model } from 'objection';
 import { ItemModel } from './item.model';
 import { TagModel } from './tag.model';
+import { MetadataModel } from './metadata.model';
 
 export class ConnectionModel extends BaseModel {
   static tableName = 'connections';
 
   name: string;
-  url: string;
   item1Id: number;
   item2Id: number;
 
   item1?: ItemModel;
   item2?: ItemModel;
   tags?: TagModel[];
+  metadata?: MetadataModel;
 
   static modifiers = {
     ...BaseModel.modifiers,
@@ -48,6 +49,15 @@ export class ConnectionModel extends BaseModel {
           to: 'connectionsTags.tagId',
         },
         to: 'tags.id',
+      },
+    },
+
+    metadata: {
+      modelClass: MetadataModel,
+      relation: Model.BelongsToOneRelation,
+      join: {
+        from: 'connections.metadataId',
+        to: 'metadata.id',
       },
     },
   });

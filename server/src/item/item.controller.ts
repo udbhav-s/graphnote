@@ -26,6 +26,7 @@ import { ConnectionService } from 'src/connection/connection.service';
 import { ConnectionModel } from 'src/database/models/connection.model';
 import * as sanitizeHtml from 'sanitize-html';
 import sanitizeHtmlOptions from '../common/util/sanitizeHtmlOptions';
+import { MetadataService } from 'src/metadata/metadata.service';
 
 
 @UseGuards(AuthenticatedGuard)
@@ -36,6 +37,7 @@ export class ItemController {
     private readonly itemService: ItemService,
     private readonly connectionService: ConnectionService,
     private readonly workspaceService: WorkspaceService,
+    private readonly metadataService: MetadataService
   ) {}
 
   @Get('/workspace/:id')
@@ -106,6 +108,17 @@ export class ItemController {
       body.body = sanitizeHtml(body.body, sanitizeHtmlOptions);
     }
 
+    if (body.url) {
+      let metadata = await this.metadataService.getByUrl(body.url);
+      if (!metadata) {
+        metadata = await this.metadataService.create(body.url);
+      }
+      // remove property
+      delete body.url;
+      // set metadata id
+      body.metadataId = metadata.id;
+    }
+
     return await this.itemService.create(body);
   }
 
@@ -126,6 +139,17 @@ export class ItemController {
 
     if (body.body) {
       body.body = sanitizeHtml(body.body, sanitizeHtmlOptions);
+    }
+
+    if (body.url) {
+      let metadata = await this.metadataService.getByUrl(body.url);
+      if (!metadata) {
+        metadata = await this.metadataService.create(body.url);
+      }
+      // remove property
+      delete body.url;
+      // set metadata id
+      body.metadataId = metadata.id;
     }
 
     return await this.itemService.update(id, body);

@@ -10,6 +10,7 @@ import { ConnectionModel } from './models/connection.model';
 import { TagModel } from './models/tag.model';
 
 import * as KnexConfig from '../../knexfile';
+import { MetadataModel } from './models/metadata.model';
 
 const models = [
   UserModel,
@@ -18,6 +19,7 @@ const models = [
   ConnectionModel,
   TagModel,
   WorkspaceUserModel,
+  MetadataModel
 ];
 
 const modelProviders = models.map(model => {

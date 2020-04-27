@@ -9,6 +9,7 @@ import { ItemModule } from './item/item.module';
 import { ConnectionModule } from './connection/connection.module';
 import { TagModule } from './tag/tag.module';
 import { LinkModule } from './link/link.module';
+import { MetadataModule } from './metadata/metadata.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { LinkModule } from './link/link.module';
     ConnectionModule,
     TagModule,
     LinkModule,
+    MetadataModule,
   ],
   controllers: [AppController],
   providers: [AppService],

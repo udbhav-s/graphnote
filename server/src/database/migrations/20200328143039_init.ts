@@ -60,6 +60,15 @@ export async function up(knex: Knex): Promise<any> {
           .onDelete('CASCADE');
         table.timestamps(true, true);
       })
+      // metadata table
+      .createTable('metadata', table => {
+        table.increments();
+        // maximum length of url in browsers
+        table.string('url', 2048).notNullable().unique();
+        table.string('title');
+        table.string('description', 2048);
+        table.string('image', 2048); // image url
+      })
       // items table
       .createTable('items', table => {
         table.increments();
@@ -75,6 +84,15 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('workspaces')
           .onDelete('CASCADE');
+        // item url metadata
+        table
+          .integer('metadata_id')
+          .unsigned();
+        table
+          .foreign('metadata_id')
+          .references('id')
+          .inTable('metadata')
+          .onDelete('SET NULL');
         table.timestamps(true, true);
       })
       // connections table
@@ -100,63 +118,16 @@ export async function up(knex: Knex): Promise<any> {
           .references('id')
           .inTable('items')
           .onDelete('CASCADE');
+        // connection url metadata
+        table
+          .integer('metadata_id')
+          .unsigned();
+        table
+          .foreign('metadata_id')
+          .references('id')
+          .inTable('metadata')
+          .onDelete('SET NULL');
         table.timestamps(true, true);
-      })
-      // metadata table
-      .createTable('metadata', table => {
-        table.increments();
-        table.string('url').notNullable().unique();
-        table.string('title');
-        table.string('description');
-        table.string('image'); // image url
-      })
-      // items metadata join table
-      .createTable('items_metadata', table => {
-        table.increments();
-        // item
-        table
-          .integer('item_id')
-          .unsigned()
-          .notNullable();
-        table
-          .foreign('item_id')
-          .references('id')
-          .inTable('items')
-          .onDelete('CASCADE');
-        // metadata
-        table
-          .integer('metadata_id')
-          .unsigned()
-          .notNullable();
-        table
-          .foreign('metadata_id')
-          .references('id')
-          .inTable('metadata')
-          .onDelete('CASCADE');
-      })
-      // connections metadata join table
-      .createTable('connections_metadata', table => {
-        table.increments();
-        // connection
-        table
-          .integer('connection_id')
-          .unsigned()
-          .notNullable();
-        table
-          .foreign('connection_id')
-          .references('id')
-          .inTable('connections')
-          .onDelete('CASCADE');
-        // metadata
-        table
-          .integer('metadata_id')
-          .unsigned()
-          .notNullable();
-        table
-          .foreign('metadata_id')
-          .references('id')
-          .inTable('metadata')
-          .onDelete('CASCADE');
       })
       // tags table
       .createTable('tags', table => {
@@ -206,11 +177,9 @@ export async function down(knex: Knex) {
   return knex.schema
     .dropTableIfExists('connections_tags')
     .dropTableIfExists('tags')
-    .dropTableIfExists('connections_metadata')
-    .dropTableIfExists('items_metadata')
-    .dropTableIfExists('metadata')
     .dropTableIfExists('connections')
     .dropTableIfExists('items')
+    .dropTableIfExists('metadata')
     .dropTableIfExists('workspaces_users')
     .dropTableIfExists('workspaces')
     .dropTableIfExists('users');

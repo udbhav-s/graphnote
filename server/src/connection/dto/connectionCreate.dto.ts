@@ -24,4 +24,6 @@ export class ConnectionCreateDto {
   @IsOptional()
   @IsString({ each: true })
   tags: any[]; // reassigned as relation expression by controller
+
+  metadataId: number;
 }
