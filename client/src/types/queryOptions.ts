@@ -3,4 +3,5 @@ export interface QueryOptions {
   offset: number;
   orderBy?: string;
   order?: string;
+  search?: string;
 }

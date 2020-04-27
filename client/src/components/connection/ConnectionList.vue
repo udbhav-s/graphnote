@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="section fixed-column">
     <h1 class="title">Connections</h1>
 
     <connection-preview
       v-for="connection in connections"
       :key="connection.id"
       :connection="connection"
+      @connection-deleted="deleteConnection"
     />
 
     <div class="field has-text-centered">
@@ -60,13 +61,17 @@ export default defineComponent({
         options.offset += options.limit;
       }
     };
-
     loadConnections();
+
+    const deleteConnection = (id: number) => {
+      connections.value = connections.value.filter(c => c.id !== id);
+    };
 
     return {
       connections,
       loadConnections,
-      hasMoreItems
+      hasMoreItems,
+      deleteConnection
     };
   }
 });

@@ -1,63 +1,42 @@
 .item-preview-container {
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
 
+  .item-preview {
+    flex-grow: 1;
+  }
+  
   .box {
     margin-bottom: 0;
   }
 }
 
 .item-preview {
-  animation: bounce ease-out 0.3s;
+  transition: 0.2s;
+  // for spacing in connection view as item is stretched
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 
-  // override bulma bottom margins
-  &:not(:last-child) {
-    margin-bottom: 0;
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.03);
+    box-shadow: $hover-box-shadow;
+    z-index: 2;
   }
-  .title:not(:last-child) {
-    margin-bottom: 1rem;
-  }
+}
 
-  .item-preview-meta {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.item-name, .title:not(:last-child) {
+  margin-bottom: 0.8rem;
+}
 
-    .image {
-      justify-self: flex-start;
-      min-width: 30%;
-      max-width: 80%;
-      margin-bottom: 1rem;
-
-      img {
-        width: 100%;
-      }
-    }
-
-    .preview-content {
-      margin: auto;
-
-      .title {
-        text-align: center;
-        margin-bottom: 0.5rem;
-      }
-    }
-
-    @include tablet {
-      flex-direction: row;
-      
-      .preview-content {
-        padding-left: 1rem;
-      }
-
-      .image {
-        min-width: 20%;
-        max-width: 30%;
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  .loading {
-    height: 200px;
+.item-image {
+  padding-bottom: 0.8rem;
+  
+  img {
+    min-height: 80px;
+    max-height: 200px;
   }
 }

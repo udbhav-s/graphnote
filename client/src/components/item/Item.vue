@@ -1,7 +1,9 @@
 <template>
-  <div v-if="item" class="section fixed-column">
-    <h1 class="title">{{ item.name }}</h1>
-    <div v-if="item.body" v-html="item.body" class="content"></div>
+  <div v-if="item" class="wide-container section">
+    <section class="">
+      <h1 class="title">{{ item.name }}</h1>
+      <div v-if="item.body" v-html="item.body" class="content"></div>
+    </section>
 
     <item-list :connectedWithItem="item.id" />
   </div>

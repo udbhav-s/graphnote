@@ -3,8 +3,8 @@ import App from "./App.vue";
 import router from "./router";
 import "./registerServiceWorker";
 
-import VueCompositionApi from '@vue/composition-api';
-import '@/config/toasted';
+import VueCompositionApi from "@vue/composition-api";
+import "@/config/toasted";
 
 Vue.config.productionTip = false;
 

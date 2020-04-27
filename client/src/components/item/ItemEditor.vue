@@ -1,5 +1,5 @@
 <template>
-  <form class="form" @submit.prevent="submit">
+  <form class="form fixed-column wide-container" @submit.prevent="submit">
     <div class="field">
       <div class="label">Name</div>
       <div class="control">
@@ -18,9 +18,10 @@
         <input v-model="form.url" type="text" class="input" placeholder="URL" />
       </div>
     </div>
+    <url-metadata :url="form.url" />
 
     <div class="field">
-      <div class="label">Body (optional)</div>
+      <div class="label">Notes (optional)</div>
       <div class="control">
         <quill-editor v-model="form.body" :options="quillOptions" />
       </div>
@@ -35,18 +36,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, watch } from "@vue/composition-api";
 import { quillEditor } from "vue-quill-editor";
 import quillOptions from "@/config/quillOptions";
 import { itemService } from "@/services/dataService";
-import { Item } from "@/types/item";
+import { ItemCreate } from "@/types/item";
+import UrlMetadata from "@/components/metadata/UrlMetadata.vue";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 
 export default defineComponent({
   name: "ItemEditor",
   components: {
-    quillEditor
+    quillEditor,
+    UrlMetadata
   },
   props: {
     editId: {
@@ -58,9 +61,9 @@ export default defineComponent({
   },
 
   setup(props, { root, emit }) {
-    // must only be opened under a workspace route
+    // must be opened under a workspace route
     const workspaceId = parseInt(root.$route.params.workspaceId);
-    const form = ref<Partial<Item>>({
+    const form = ref<ItemCreate>({
       name: "",
       url: "",
       body: "",
@@ -78,12 +81,12 @@ export default defineComponent({
           root.$toasted.error("Item does not belong to workspace");
           root.$router.go(-1);
         } else {
-          const { name, url, body } = result.data;
+          const { name, metadata: { url } = { url: "" }, body } = result.data;
           form.value = { name, url, body, workspaceId };
         }
       }
     };
-    loadItem();
+    watch(() => props.editId, loadItem);
 
     const submit = async () => {
       let result;

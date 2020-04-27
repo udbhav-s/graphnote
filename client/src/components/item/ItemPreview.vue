@@ -1,51 +1,41 @@
 <template>
   <div class="item-preview-container">
-    <div
+    <connection-header-box
       v-if="item.connection"
-      class="box connection-name has-background-white-ter"
-    >
-      {{ item.connection.name }}
-    </div>
+      :connection="item.connection"
+      :workspaceId="item.workspaceId"
+      @connection-deleted="$emit('item-deleted', item.id)"
+    />
 
     <router-link
       :to="{ name: 'Item', params: { id: item.id } }"
-      class="box item-preview"
+      class="item-preview box"
     >
-      <h1 class="title is-5">{{ item.name }}</h1>
-
-      <template v-if="item.url">
-        <div v-if="itemMeta" class="item-preview-meta">
-          <div class="image">
-            <img v-if="itemMeta.image" :src="itemMeta.image" />
-          </div>
-
-          <div class="preview-content">
-            <h1 v-if="itemMeta.title" class="title is-6">
-              {{ itemMeta.title }}
-            </h1>
-
-            <p v-if="itemMeta.description" class="description">
-              {{ itemMeta.description }}
-            </p>
-          </div>
+      <h2 class="title is-4 item-name">{{ item.name }}</h2>
+      <template v-if="item.metadata">
+        <div v-if="item.metadata.image" class="item-image">
+          <img :src="item.metadata.image" />
         </div>
-        <div v-else class="loading"></div>
+        <div class="item-meta">
+          <h2 v-if="item.metadata.title" class="title is-6">
+            {{ item.metadata.title }}
+          </h2>
+        </div>
       </template>
     </router-link>
 
-    <connection-meta
-      v-if="item.connection && item.connection.url"
-      :connection="item.connection"
+    <metadata-sub-box
+      v-if="item.connection && item.connection.metadata"
+      :metadata="item.connection.metadata"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
-import { Metadata } from "@/types/metadata";
+import { defineComponent } from "@vue/composition-api";
 import { Item } from "@/types/item";
-import { linkService } from "@/services/dataService";
-import ConnectionMeta from "@/components/connection/ConnectionMeta.vue";
+import MetadataSubBox from "@/components/metadata/MetadataSubBox.vue";
+import ConnectionHeaderBox from "@/components/connection/ConnectionHeaderBox.vue";
 
 export default defineComponent({
   name: "ItemPreview",
@@ -56,29 +46,8 @@ export default defineComponent({
     }
   },
   components: {
-    ConnectionMeta
-  },
-
-  setup(props, { root }) {
-    const itemMeta = ref<Metadata>(null);
-    if (props.item.url) {
-      linkService
-        .scrape(props.item.url)
-        .then(result => {
-          if ("error" in result) throw result.error;
-          else {
-            itemMeta.value = result.data;
-          }
-        })
-        .catch(err => {
-          root.$toasted.error("Error loading item data");
-          console.log(err);
-        });
-    }
-
-    return {
-      itemMeta
-    };
+    MetadataSubBox,
+    ConnectionHeaderBox
   }
 });
 </script>

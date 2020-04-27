@@ -17,6 +17,6 @@ export default {
     "blockquote",
     "code-block",
     "list",
-    "link",
+    "link"
   ]
-}
+};

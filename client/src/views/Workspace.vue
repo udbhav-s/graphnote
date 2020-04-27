@@ -1,8 +1,10 @@
 <template>
   <section v-if="workspace">
-    <div class="container">
-      <h1 class="title">{{ workspace.name }}</h1>
-      <div class="section fixed-column">
+    <div class="wide-container">
+      <div class="vertical-pad">
+        <h1 class="title">{{ workspace.name }}</h1>
+      </div>
+      <div class="">
         <router-view />
       </div>
     </div>
