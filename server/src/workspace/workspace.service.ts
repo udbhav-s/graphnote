@@ -50,6 +50,7 @@ export class WorkspaceService {
       .where({ id })
       .patch(body)
       .returning('*')
+      .modify(GET_USERS)
       .first();
   }
 
