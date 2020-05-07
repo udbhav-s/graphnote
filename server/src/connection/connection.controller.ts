@@ -45,7 +45,7 @@ export class ConnectionController {
     @Query(new ValidationPipe({ transform: true })) options: QueryOptionsDto,
     @Req() req,
   ): Promise<ConnectionModel[]> {
-    if (!(await this.workspaceService.canAccess(workspaceId, req.user.id))) {
+    if (!(await this.workspaceService.canAccess(workspaceId, req.user?.id))) {
       throw new ForbiddenException();
     }
 
@@ -63,7 +63,7 @@ export class ConnectionController {
     if (!item) throw new NotFoundException();
 
     if (
-      !(await this.workspaceService.canAccess(item.workspaceId, req.user.id))
+      !(await this.workspaceService.canAccess(item.workspaceId, req.user?.id))
     ) {
       throw new ForbiddenException();
     }
@@ -84,7 +84,7 @@ export class ConnectionController {
     if (
       !(await this.workspaceService.canAccess(
         connection.item1.workspaceId,
-        req.user.id,
+        req.user?.id,
       ))
     ) {
       throw new ForbiddenException();

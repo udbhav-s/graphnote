@@ -75,7 +75,7 @@ export class WorkspaceService {
     return await this.workspaceModel.query().deleteById(id);
   }
 
-  async canModify(id: number, userId: number): Promise<boolean> {
+  async canModify(id: number, userId: number | undefined): Promise<boolean> {
     const workspace = await this.getById(id);
     if (!workspace) return false;
     return (
@@ -84,7 +84,7 @@ export class WorkspaceService {
     );
   }
 
-  async canAccess(id: number, userId: number): Promise<boolean> {
+  async canAccess(id: number, userId: number | undefined): Promise<boolean> {
     const workspace = await this.getById(id);
     if (!workspace) return false;
     return (await this.canModify(id, userId)) || workspace.public;

@@ -33,7 +33,7 @@ export class TagController {
     @Param('id', ParseIntPipe) workspaceId: number,
     @Req() req,
   ): Promise<TagModel[]> {
-    if (!(await this.workspaceService.canAccess(workspaceId, req.user.id))) {
+    if (!(await this.workspaceService.canAccess(workspaceId, req.user?.id))) {
       throw new ForbiddenException();
     }
 

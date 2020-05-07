@@ -45,7 +45,7 @@ export class ItemController {
     @Req() req,
   ): Promise<ItemModel[]> {
     // check if allowed
-    if (!(await this.workspaceService.canAccess(id, req.user.id)))
+    if (!(await this.workspaceService.canAccess(id, req.user?.id)))
       throw new ForbiddenException();
 
     // get items
@@ -60,7 +60,7 @@ export class ItemController {
     const item = await this.itemService.getById(id);
     if (!item) throw new NotFoundException();
     if (
-      !(await this.workspaceService.canAccess(item.workspaceId, req.user.id))
+      !(await this.workspaceService.canAccess(item.workspaceId, req.user?.id))
     ) {
       throw new ForbiddenException();
     }
@@ -77,7 +77,7 @@ export class ItemController {
     const item = await this.itemService.getById(id);
     if (!item) throw new NotFoundException();
     if (
-      !(await this.workspaceService.canAccess(item.workspaceId, req.user.id))
+      !(await this.workspaceService.canAccess(item.workspaceId, req.user?.id))
     ) {
       throw new ForbiddenException();
     }
