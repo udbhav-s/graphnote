@@ -48,8 +48,10 @@ export class WorkspaceController {
     @Param('id', ParseIntPipe) id: number,
     @Req() req,
   ): Promise<WorkspaceModel> {
-    if (!this.workspaceService.canAccess(id, req.user?.id))
+    if (!await this.workspaceService.canAccess(id, req.user?.id)) {
+      console.log("Can't access");
       throw new ForbiddenException();
+    }
 
     return await this.workspaceService.getById(id);
   }
