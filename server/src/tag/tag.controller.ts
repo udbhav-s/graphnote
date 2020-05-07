@@ -20,7 +20,6 @@ import { TagModel } from 'src/database/models/tag.model';
 import { WorkspaceService } from 'src/workspace/workspace.service';
 import { TagCreateDto } from './dto/tagCreate.dto';
 
-@UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
 @Controller('api/tag')
 export class TagController {
@@ -41,6 +40,7 @@ export class TagController {
     return await this.tagService.getByWorkspace(workspaceId);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/create')
   async create(@Body() body: TagCreateDto, @Req() req): Promise<TagModel> {
     if (
@@ -52,6 +52,7 @@ export class TagController {
     return await this.tagService.create(body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Put('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -69,6 +70,7 @@ export class TagController {
     return this.tagService.update(id, body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('/:id')
   async del(
     @Param('id', ParseIntPipe) id: number,

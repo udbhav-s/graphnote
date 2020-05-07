@@ -28,8 +28,6 @@ import * as sanitizeHtml from 'sanitize-html';
 import sanitizeHtmlOptions from '../common/util/sanitizeHtmlOptions';
 import { MetadataService } from 'src/metadata/metadata.service';
 
-
-@UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
 @Controller('api/item')
 export class ItemController {
@@ -96,6 +94,7 @@ export class ItemController {
     return items;
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/create')
   async create(@Body() body: ItemCreateDto, @Req() req): Promise<ItemModel> {
     if (
@@ -122,6 +121,7 @@ export class ItemController {
     return await this.itemService.create(body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Put('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -155,6 +155,7 @@ export class ItemController {
     return await this.itemService.update(id, body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('/:id')
   async del(
     @Param('id', ParseIntPipe) id: number,

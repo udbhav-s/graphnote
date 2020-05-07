@@ -23,7 +23,6 @@ import { WorkspaceUserDto } from './dto/workspaceUser.dto';
 import { WorkspaceUserModel } from 'src/database/models/workspaceUser.model';
 import { UserService } from 'src/user/user.service';
 
-@UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
 @Controller('api/workspace')
 export class WorkspaceController {
@@ -32,11 +31,13 @@ export class WorkspaceController {
     private readonly userService: UserService,
   ) {}
 
+  @UseGuards(AuthenticatedGuard)
   @Get('/user')
   async getByUser(@Req() req): Promise<WorkspaceModel[]> {
     return await this.workspaceService.getByUser(req.user.id);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Get('/shared')
   async getSharedWith(@Req() req): Promise<WorkspaceModel[]> {
     return await this.workspaceService.getSharedWith(req.user.id);
@@ -53,6 +54,7 @@ export class WorkspaceController {
     return await this.workspaceService.getById(id);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/create')
   async create(
     @Body() body: WorkspaceCreateDto,
@@ -64,6 +66,7 @@ export class WorkspaceController {
     });
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Put('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -78,6 +81,7 @@ export class WorkspaceController {
     return await this.workspaceService.update(id, body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/user/add')
   async addUser(
     @Body() body: WorkspaceUserDto,
@@ -107,6 +111,7 @@ export class WorkspaceController {
     return await this.workspaceService.addUser(workspace.id, user.id);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/user/remove')
   async removeUser(
     @Body() body: WorkspaceUserDto,
@@ -129,6 +134,7 @@ export class WorkspaceController {
     return await this.workspaceService.removeUser(workspace.id, user.id);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('/:id')
   async del(
     @Param('id', ParseIntPipe) id: number,

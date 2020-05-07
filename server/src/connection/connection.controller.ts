@@ -28,7 +28,6 @@ import { TagService } from 'src/tag/tag.service';
 import { QueryOptionsDto } from 'src/common/dto/queryOptions.dto';
 import { MetadataService } from 'src/metadata/metadata.service';
 
-@UseGuards(AuthenticatedGuard)
 @UseInterceptors(FormatResponseInterceptor)
 @Controller('api/connection')
 export class ConnectionController {
@@ -94,6 +93,7 @@ export class ConnectionController {
     return connection;
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Post('/create')
   async create(
     @Body(new ValidationPipe({ transform: true })) body: ConnectionCreateDto,
@@ -128,6 +128,7 @@ export class ConnectionController {
     return await this.connectionService.create(body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Put('/update/:id')
   async update(
     @Param('id', ParseIntPipe) id: number,
@@ -166,6 +167,7 @@ export class ConnectionController {
     return await this.connectionService.update(id, body);
   }
 
+  @UseGuards(AuthenticatedGuard)
   @Delete('/:id')
   async del(
     @Param('id', ParseIntPipe) id: number,
