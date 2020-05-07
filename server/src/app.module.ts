@@ -8,7 +8,6 @@ import { WorkspaceModule } from './workspace/workspace.module';
 import { ItemModule } from './item/item.module';
 import { ConnectionModule } from './connection/connection.module';
 import { TagModule } from './tag/tag.module';
-import { LinkModule } from './link/link.module';
 import { MetadataModule } from './metadata/metadata.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from "path";
@@ -25,7 +24,6 @@ import * as path from "path";
     ItemModule,
     ConnectionModule,
     TagModule,
-    LinkModule,
     MetadataModule,
   ],
   controllers: [AppController],
