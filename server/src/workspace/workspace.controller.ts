@@ -49,7 +49,6 @@ export class WorkspaceController {
     @Req() req,
   ): Promise<WorkspaceModel> {
     if (!await this.workspaceService.canAccess(id, req.user?.id)) {
-      console.log("Can't access");
       throw new ForbiddenException();
     }
 
