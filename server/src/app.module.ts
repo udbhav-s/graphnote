@@ -10,9 +10,14 @@ import { ConnectionModule } from './connection/connection.module';
 import { TagModule } from './tag/tag.module';
 import { LinkModule } from './link/link.module';
 import { MetadataModule } from './metadata/metadata.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from "path";
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.join(__dirname, '..', '..', 'public'),
+    }),
     AuthModule,
     UserModule,
     DatabaseModule,

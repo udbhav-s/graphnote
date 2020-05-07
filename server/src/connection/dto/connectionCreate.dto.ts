@@ -1,5 +1,4 @@
 import {
-  IsDefined,
   IsString,
   IsInt,
   IsOptional,
@@ -7,7 +6,7 @@ import {
 } from 'class-validator';
 
 export class ConnectionCreateDto {
-  @IsDefined()
+  @IsOptional()
   @IsString()
   name: string;
 
