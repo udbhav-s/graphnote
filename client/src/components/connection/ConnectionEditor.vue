@@ -36,7 +36,7 @@
 
       <div v-if="item1Tab === 'existing'">
         <div class="control">
-          <item-picker v-model="item1" :workspaceId="workspaceId" />
+          <item-picker v-model="item1" />
         </div>
         <item-preview v-if="item1.id" :item="item1" />
       </div>
@@ -62,7 +62,7 @@
 
       <div v-if="item2Tab === 'existing'">
         <div class="control">
-          <item-picker v-model="item2" :workspaceId="workspaceId" />
+          <item-picker v-model="item2" />
         </div>
         <item-preview v-if="item2.id" :item="item2" />
       </div>
@@ -86,7 +86,9 @@
 
     <div class="field">
       <div class="control has-text-centered">
-        <button class="button is-success" type="submit">Submit</button>
+        <button :disabled="!canSubmit" class="button is-success" type="submit">
+          Submit
+        </button>
       </div>
     </div>
   </form>
@@ -105,10 +107,9 @@ import ItemPreview from "@/components/item/ItemPreview.vue";
 import ItemPicker from "@/components/item/ItemPicker.vue";
 import VueTagsInput from "@johmun/vue-tags-input";
 import UrlMetadata from "@/components/metadata/UrlMetadata.vue";
-import { ConnectionCreate } from "@/types/connection";
-import { Item } from "@/types/item";
-import { TagCreate } from "@/types/tag";
+import { Item, TagCreate, Workspace, ConnectionCreate } from "@/types";
 import { connectionService, tagService } from "@/services/dataService";
+import { workspaceStore } from "@/store";
 import pickBy from "lodash-es/pickBy";
 import identity from "lodash-es/identity";
 
@@ -130,7 +131,7 @@ export default defineComponent({
     }
   },
 
-  setup(props, { root }) {
+  setup(props, { root, emit }) {
     const form = reactive<ConnectionCreate>({
       name: "",
       url: ""
@@ -138,17 +139,17 @@ export default defineComponent({
     const tags = ref<TagCreate[]>([]);
     const item1 = ref<Item>({});
     const item2 = ref<Item>({});
-
-    const workspaceId = parseInt(root.$route.params.workspaceId);
+    const workspace = computed<Workspace>(workspaceStore.getters.workspace);
+    const submitting = ref<boolean>(false);
+    const canSubmit = computed<boolean>(() => {
+      return !!item1.value.id && !!item2.value.id && !submitting.value;
+    });
 
     const loadConnection = async () => {
       if (props.editId) {
         // fetch connection
         const result = await connectionService.getById(props.editId);
-        if ("error" in result) {
-          root.$toasted.error("Error loading connection");
-          console.log("error");
-        } else {
+        if ("success" in result) {
           const con = result.data;
           // form data
           form.name = con.name;
@@ -157,6 +158,8 @@ export default defineComponent({
           // items
           item1.value = con.item1;
           item2.value = con.item2;
+        } else {
+          root.$toasted.error(result.message);
         }
       }
     };
@@ -171,37 +174,47 @@ export default defineComponent({
         item2Id: item2.value.id
       } as ConnectionCreate;
 
+      submitting.value = true;
+
       if (props.editId)
         result = await connectionService.update(props.editId, data);
       else result = await connectionService.create(data);
 
-      if ("error" in result) {
-        root.$toasted.error("Error creating connection");
-        console.log(result.error);
-      } else {
+      submitting.value = false;
+
+      if ("success" in result) {
+        // redirect
         if (props.redirect) {
           root.$router.push({
             name: "Connections",
             params: {
-              workspaceId: workspaceId.toString()
+              workspaceId: workspace.value.id.toString()
             }
           });
         }
+        // emit event
+        emit("connection-created", result.data);
+        // toast
+        if (props.editId) root.$toasted.success("Connection edited");
+        else root.$toasted.success("Connection created");
+      } else {
+        root.$toasted.error("Error submitting connection: " + result.message);
       }
     };
 
     const tag = ref<string>("");
     const workspaceTags = ref<TagCreate[]>([]);
     const loadWorkspaceTags = async () => {
-      const result = await tagService.getByWorkspace(workspaceId);
-      if ("error" in result) {
-        root.$toasted.error("Error loading tag list");
-        console.log(result.error);
-      } else {
+      const result = await tagService.getByWorkspace(workspace.value.id);
+      if ("success" in result) {
         workspaceTags.value = result.data.map(t => ({ text: t.name }));
+      } else {
+        root.$toasted.error("Error loading tags: " + result.message);
       }
     };
-    loadWorkspaceTags().then(() => console.log(workspaceTags.value));
+    watch(workspace, val => {
+      if (val && val.id) loadWorkspaceTags();
+    });
 
     const filteredTags = computed((): TagCreate[] => {
       return workspaceTags.value.filter(t => {
@@ -225,8 +238,8 @@ export default defineComponent({
       form,
       item1,
       item2,
-      workspaceId,
       submit,
+      canSubmit,
       tag,
       tags,
       filteredTags,

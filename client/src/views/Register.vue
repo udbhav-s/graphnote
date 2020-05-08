@@ -3,7 +3,7 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
-          <h2 class="title">Log in</h2>
+          <h2 class="title">Register</h2>
           <div class="box">
             <div class="field">
               <div class="control">
@@ -28,7 +28,7 @@
               </div>
             </div>
             <button
-              @click="login"
+              @click="register"
               class="button is-block is-fullwidth is-primary"
             >
               Submit
@@ -53,18 +53,18 @@ export default defineComponent({
       password: ""
     });
 
-    function login() {
+    function register() {
       userStore.mutations
-        .login(form)
-        .then(() => root.$router.push("/"))
+        .register(form)
+        .then(() => root.$router.push({ name: "Login" }))
         .catch(err => {
-          root.$toasted.error("Error logging in: " + err.message);
+          root.$toasted.error("Error registering: " + err.message);
         });
     }
 
     return {
       form,
-      login
+      register
     };
   }
 });

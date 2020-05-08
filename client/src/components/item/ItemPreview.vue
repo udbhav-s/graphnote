@@ -8,7 +8,7 @@
     />
 
     <router-link
-      :to="{ name: 'Item', params: { id: item.id } }"
+      :to="{ name: 'Item', params: { itemId: item.id } }"
       class="item-preview box"
     >
       <h2 class="title is-4 item-name">{{ item.name }}</h2>
@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import { Item } from "@/types/item";
+import { Item } from "@/types";
 import MetadataSubBox from "@/components/metadata/MetadataSubBox.vue";
 import ConnectionHeaderBox from "@/components/connection/ConnectionHeaderBox.vue";
 
@@ -51,3 +51,50 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss">
+@import "@/assets/styles/style.scss";
+
+.item-preview-container {
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+
+  .item-preview {
+    flex-grow: 1;
+  }
+
+  & > .box {
+    margin-bottom: 0 !important;
+  }
+}
+
+.item-preview.box {
+  transition: 0.2s;
+  // for spacing in connection view as item is stretched
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  &:hover {
+    cursor: pointer;
+    transform: scale(1.01);
+    box-shadow: $hover-box-shadow;
+    z-index: 2;
+  }
+}
+
+.item-name.title {
+  margin-bottom: 0.8rem !important;
+}
+
+.item-image {
+  padding-bottom: 0.8rem;
+
+  img {
+    min-width: 80px;
+    max-height: 200px;
+  }
+}
+</style>

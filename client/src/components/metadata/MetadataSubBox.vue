@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import { defineComponent } from "@vue/composition-api";
-import { Metadata } from "@/types/metadata";
+import { Metadata } from "@/types";
 
 export default defineComponent({
   name: "MetadataSubBox",
@@ -29,3 +29,25 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss">
+.metadata {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+
+  .metadata-image {
+    min-width: 50px;
+    max-width: 8rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .metadata-title {
+    text-align: left;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}
+</style>

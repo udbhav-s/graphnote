@@ -4,7 +4,7 @@ import { User } from "@/types/user";
 import { ApiResponse } from "@/types/api";
 import { Connection, ConnectionCreate } from "@/types/connection";
 import { QueryOptions } from "@/types/queryOptions";
-import { Workspace } from "@/types/workspace";
+import { Workspace, WorkspaceCreate, WorkspaceAddUser, WorkspaceUser } from "@/types/workspace";
 import { Metadata } from "@/types/metadata";
 import { Item, ItemCreate } from "@/types/item";
 import { Tag } from "@/types/tag";
@@ -14,7 +14,10 @@ api.interceptors.response.use(
   // error
   res => {
     console.log({ ...res });
-    return res;
+    if (res.response.data?.message instanceof Array) {
+      res.response.data.message = res.response.data.message.join(", ");
+    }
+    return res.response.data;
   }
 );
 
@@ -29,7 +32,7 @@ export const userService = {
     return api.post<ApiResponse<number>>("/user/login", credentials);
   },
   logout() {
-    return api.get("/user/logout");
+    return api.post("/user/logout");
   }
 };
 
@@ -42,6 +45,21 @@ export const workspaceService = {
   },
   getSharedWith() {
     return api.get<ApiResponse<Workspace[]>>("/workspace/shared");
+  },
+  create(body: WorkspaceCreate) {
+    return api.post<ApiResponse<Workspace>>("/workspace/create", body);
+  },
+  update(id: number, body: WorkspaceCreate) {
+    return api.put<ApiResponse<Workspace>>(`/workspace/update/${id}`, body);
+  },
+  addUser(body: WorkspaceAddUser) {
+    return api.post<ApiResponse<WorkspaceUser>>("/workspace/user/add", body);
+  },
+  removeUser(body: WorkspaceAddUser) {
+    return api.post<ApiResponse<WorkspaceUser>>("/workspace/user/remove", body);
+  },
+  del(id: number) {
+    return api.delete<ApiResponse<number>>(`/workspace/${id}`);
   }
 };
 
@@ -64,6 +82,12 @@ export const connectionService = {
   },
   getById(id: number) {
     return api.get<ApiResponse<Connection>>(`/connection/${id}`);
+  },
+  getWithItem(itemId: number, options?: QueryOptions) {
+    return api.get<ApiResponse<Connection[]>>(
+      `/connection/item/${itemId}`,
+      { params: options }
+    );
   },
   create(body: ConnectionCreate) {
     return api.post<ApiResponse<Connection>>(`/connection/create`, body);
@@ -95,6 +119,9 @@ export const itemService = {
   },
   update(id: number, body: ItemCreate) {
     return api.put<ApiResponse<Item>>(`item/update/${id}`, body);
+  },
+  del(id: number) {
+    return api.delete<ApiResponse<number>>(`/item/${id}`);
   }
 };
 

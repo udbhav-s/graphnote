@@ -1,19 +1,71 @@
 <template>
-  <div v-if="item" class="wide-container section">
-    <section class="">
+  <div v-if="item" class="wide-container section item-page">
+    <section>
       <h1 class="title">{{ item.name }}</h1>
+      <div v-if="isAuthenticated" class="options field">
+        <router-link
+          :to="{
+            name: 'EditItem',
+            params: { id: item.id }
+          }"
+          class="button is-small"
+        >
+          Edit
+        </router-link>
+        <button @click="deleteItem" class="options button is-small is-danger">
+          Delete
+        </button>
+      </div>
+
       <div v-if="item.body" v-html="item.body" class="content"></div>
+
+      <div v-if="item.metadata" class=" item-page-preview">
+        <div v-if="item.metadata.image" class="image">
+          <img :src="item.metadata.image" />
+        </div>
+
+        <div class="preview-body">
+          <h1 v-if="item.metadata.title" class="title is-5">
+            {{ item.metadata.title }}
+          </h1>
+          <p v-if="item.metadata.description">
+            {{ item.metadata.description }}
+          </p>
+          <a :href="item.metadata.url">{{ item.metadata.url }}</a>
+        </div>
+      </div>
     </section>
 
-    <item-list :connectedWithItem="item.id" />
+    <section class="vertical-pad">
+      <item-list :connectedWithItem="item.id" />
+    </section>
+
+    <section v-if="graph">
+      <h1 class="title vertical-pad-m">Graph</h1>
+      <div v-if="loadGraph">
+        <graph :itemId="item.id" />
+        <div class="field has-text-centered">
+          <button @click="loadGraph = false" class="button is-danger">
+            Close
+          </button>
+        </div>
+      </div>
+      <div v-else class="field has-text-centered">
+        <button @click="loadGraph = true" class="button is-primary">
+          Load Graph
+        </button>
+      </div>
+    </section>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "@vue/composition-api";
-import { Item } from "@/types/item";
+import { defineComponent, ref, watch, computed } from "@vue/composition-api";
+import { Item } from "@/types";
 import { itemService } from "@/services/dataService";
+import { userStore } from "@/store";
 import ItemList from "@/components/item/ItemList.vue";
+import Graph from "@/components/graph/Graph.vue";
 
 export default defineComponent({
   name: "Item",
@@ -21,30 +73,78 @@ export default defineComponent({
     id: {
       type: Number as () => number,
       required: true
+    },
+    graph: {
+      type: Boolean as () => boolean
     }
   },
   components: {
-    ItemList
+    ItemList,
+    Graph
   },
 
   setup(props, { root }) {
+    const isAuthenticated = computed<boolean>(
+      userStore.getters.isAuthenticated
+    );
+
     const item = ref<Item>(null);
     const loadItem = async () => {
       const result = await itemService.getById(props.id);
-      if ("error" in result) {
-        root.$toasted.error("Error loading item");
-        console.log(result.error);
-      } else item.value = result.data;
+      if ("success" in result) item.value = result.data;
+      else root.$toasted.error("Error loading item: " + result.message);
     };
-    loadItem();
-
-    // watch for id change
     watch(() => props.id, loadItem);
+
+    const deleteItem = async () => {
+      if (confirm("Are you sure you want to delete this item?")) {
+        if (!item.value) return;
+        const result = await itemService.del(item.value.id);
+
+        if ("success" in result) {
+          root.$router.push({ name: "Items" });
+          // toast
+          root.$toasted.success("Item deleted");
+        } else root.$toasted.error("Error deleting item: " + result.message);
+      }
+    };
+
+    const loadGraph = ref<boolean>(false);
 
     return {
       item,
-      loadItem
+      loadItem,
+      deleteItem,
+      loadGraph,
+      isAuthenticated
     };
   }
 });
 </script>
+
+<style lang="scss">
+.item-page {
+  .network-container {
+    max-width: 50rem;
+    height: 30rem;
+    margin: auto;
+  }
+}
+
+.item-page-preview {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-evenly;
+
+  .image {
+    max-width: 20rem;
+  }
+
+  .preview-body {
+    padding: 1rem;
+    max-width: 40rem;
+  }
+}
+</style>

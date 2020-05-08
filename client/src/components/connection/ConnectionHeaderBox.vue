@@ -2,11 +2,11 @@
   <div class="box connection-header has-background-white-ter">
     <div class="connection-name">
       <h1 class="title is-4">{{ connection.name }}</h1>
-      <div class="options">
+      <div v-if="isAuthenticated" class="options">
         <router-link
           :to="{
             name: 'EditConnection',
-            params: { workspaceId, id: connection.id }
+            params: { id: connection.id }
           }"
           class="button is-small"
         >
@@ -34,9 +34,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/composition-api";
-import { Connection } from "@/types/connection";
+import { defineComponent, computed } from "@vue/composition-api";
+import { Connection } from "@/types";
 import { connectionService } from "@/services/dataService";
+import { userStore } from "@/store";
 
 export default defineComponent({
   name: "ConnectionHeaderBox",
@@ -44,24 +45,56 @@ export default defineComponent({
     connection: {
       type: Object as () => Connection,
       required: true
-    },
-    workspaceId: {
-      type: Number as () => number,
-      required: true
     }
   },
 
   setup(props, { root, emit }) {
+    const isAuthenticated = computed<boolean>(
+      userStore.getters.isAuthenticated
+    );
+
     const deleteConnection = async () => {
-      const result = await connectionService.del(props.connection.id);
-      if ("error" in result) {
-        root.$toasted.error("Error deleting connection");
-      } else emit("connection-deleted", props.connection.id);
+      if (confirm("Are you sure you want to delete this connection?")) {
+        const result = await connectionService.del(props.connection.id);
+
+        if ("success" in result) {
+          emit("connection-deleted", props.connection.id);
+          root.$toasted.success("Connection deleted");
+        } else
+          root.$toasted.error("Error deleting connection: " + result.message);
+      }
     };
 
     return {
+      isAuthenticated,
       deleteConnection
     };
   }
 });
 </script>
+
+<style lang="scss">
+.box.connection-header {
+  padding: 0.8rem;
+
+  .connection-name {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .title {
+      margin-bottom: 0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+
+  .tags {
+    margin-top: 0.5rem;
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 import Vue from "vue";
-import { userService } from "@/services/dataService";
+import { userService, workspaceService } from "@/services/dataService";
 import { Credentials } from "@/types/credentials";
 import { User } from "@/types/user";
 import { Workspace } from "@/types/workspace";
@@ -9,10 +9,10 @@ const store = Vue.observable({
   workspace: {} as Workspace
 });
 
-export const user = {
+export const userStore = {
   getters: {
     user: () => store.user,
-    isAuthenticated: () => store.user && store.user.id
+    isAuthenticated: () => !!(store.user && store.user.id)
   },
 
   mutations: {
@@ -22,7 +22,7 @@ export const user = {
         username: credentials.username.trim(),
         password: credentials.password.trim()
       });
-      if (!result.success) throw result.error;
+      if (!("success" in result)) throw result;
     },
 
     setUser(user: User) {
@@ -35,10 +35,12 @@ export const user = {
         username: credentials.username.trim(),
         password: credentials.password.trim()
       });
-      if (!result.success) throw result.error;
+      if (!("success" in result)) throw result;
+
       // send request for user details
       const currentUser = await userService.getCurrent();
-      if (!currentUser.success) throw currentUser.error;
+      if (!("success" in currentUser)) throw currentUser;
+
       // commit user to state
       this.setUser(currentUser.data);
     },
@@ -51,7 +53,7 @@ export const user = {
   }
 };
 
-export const workspace = {
+export const workspaceStore = {
   getters: {
     workspace: () => store.workspace
   },
@@ -59,12 +61,22 @@ export const workspace = {
   mutations: {
     setWorkspace(workspace: Workspace) {
       store.workspace = workspace;
+    },
+
+    async loadWorkspace(id: number) {
+      const result = await workspaceService.getById(id);
+      if ("success" in result) this.setWorkspace(result.data);
+      else throw result;
+    },
+
+    async reloadWorkspace() {
+      return await this.loadWorkspace(store.workspace.id);
     }
   }
 };
 
 export default {
   store,
-  user,
-  workspace
+  userStore,
+  workspaceStore
 };

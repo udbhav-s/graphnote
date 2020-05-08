@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter, { RouteConfig } from "vue-router";
 import Home from "../views/Home.vue";
-import { user } from "@/store";
+import { userStore } from "@/store";
 import { userService } from "@/services/dataService";
 
 Vue.use(VueRouter);
@@ -19,9 +19,25 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "login" */ "@/views/Login.vue")
   },
   {
+    path: "/register",
+    name: "Register",
+    component: () => import(/* webpackChunkName: "register" */ "@/views/Register.vue")
+  },
+  {
     path: "/about",
     name: "About",
     component: () => import(/* webpackChunkName: "about" */ "@/views/About.vue")
+  },
+  {
+    path: "/forbidden",
+    name: "Forbidden",
+    component: () => import(/* webpackChunkName: "forbidden" */ "@/views/Forbidden.vue")
+  },
+  {
+    path: "/workspace/create",
+    name: "WorkspaceCreate",
+    props: () => ({ editMode: false }),
+    component: () => import(/* webpackChunkName: "createWorkspace" */ "@/views/CreateWorkspace.vue")
   },
   {
     path: "/workspace/:workspaceId",
@@ -34,8 +50,56 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: "/",
+        name: "Items",
+        alias: "items",
+        component: () =>
+          import(
+            /* webpackChunkName: "itemList" */
+
+            "@/components/item/ItemList.vue"
+          )
+      },
+      {
+        path: "item/create",
+        name: "CreateItem",
+        component: () =>
+          import(
+            /* webpackChunkName: "itemEditor" */
+
+            "@/components/item/ItemEditor.vue"
+          ),
+        props: () => ({ redirect: true })
+      },
+      {
+        path: "item/edit/:id",
+        name: "EditItem",
+        component: () =>
+          import(
+            /* webpackChunkName: "itemEditor" */
+
+            "@/components/item/ItemEditor.vue"
+          ),
+        props: route => ({
+          editId: parseInt(route.params.id),
+          redirect: true
+        })
+      },
+      {
+        path: "item/:itemId",
+        name: "Item",
+        props: route => ({
+          id: parseInt(route.params.itemId)
+        }),
+        component: () =>
+          import(
+            /* webpackChunkName: "item" */
+    
+            "@/components/item/Item.vue"
+          )
+      },
+      {
         name: "Connections",
-        alias: "connections",
+        path: "connections",
         component: () =>
           import(
             /* webpackChunkName: "connectionList" */
@@ -69,55 +133,33 @@ const routes: Array<RouteConfig> = [
         })
       },
       {
-        path: "items",
-        name: "Items",
+        path: "graph",
+        name: "Graph",
+        meta: {
+          graph: true
+        },
         component: () =>
           import(
-            /* webpackChunkName: "itemList" */
+            /* webpackChunkName: "graphView" */
 
-            "@/components/item/ItemList.vue"
+            "@/components/graph/GraphView.vue"
           )
       },
       {
-        path: "item/create",
-        name: "CreateItem",
-        component: () =>
-          import(
-            /* webpackChunkName: "itemEditor" */
-
-            "@/components/item/ItemEditor.vue"
-          ),
-        props: () => ({ redirect: true })
-      },
-      {
-        path: "item/edit/:id",
-        name: "EditItem",
-        component: () =>
-          import(
-            /* webpackChunkName: "itemEditor" */
-
-            "@/components/item/ItemEditor.vue"
-          ),
+        path: "settings",
+        name: "WorkspaceSettings",
+        meta: { requiresAuth: true },
         props: route => ({
-          editId: parseInt(route.params.id),
-          redirect: true
-        })
+          workspaceId: parseInt(route.params.workspaceId)
+        }),
+        component: () =>
+          import(
+            /* webpackChunkName: "workspaceSettings" */
+
+            "@/components/workspace/WorkspaceSettings.vue"
+          )
       }
     ]
-  },
-  {
-    path: "/item/:id",
-    name: "Item",
-    meta: { requiresAuth: true },
-    props: route => ({
-      id: parseInt(route.params.id)
-    }),
-    component: () =>
-      import(
-        /* webpackChunkName: "item" */
-
-        "@/components/item/Item.vue"
-      )
   }
 ];
 
@@ -128,14 +170,14 @@ const router = new VueRouter({
 });
 
 router.beforeEach(async (to, _from, next) => {
-  if (to.meta?.requiresAuth && !user.getters.isAuthenticated()) {
+  if (to.meta?.requiresAuth && !userStore.getters.isAuthenticated()) {
     // the user still might be authenticated
     // since the store is reset on page refresh
     try {
       const result = await userService.getCurrent();
-      if (result.success) {
+      if ("success" in result) {
         // set the user in store
-        user.mutations.setUser(result.data);
+        userStore.mutations.setUser(result.data);
         // continute to route
         return next();
       } else return next({ name: "Login" });

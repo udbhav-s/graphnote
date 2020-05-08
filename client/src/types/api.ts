@@ -4,7 +4,6 @@ export interface ApiSuccess<T> {
 }
 
 export interface ApiError {
-  success: false;
   error: string;
   message: string;
   status: number;

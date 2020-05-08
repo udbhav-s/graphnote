@@ -8,7 +8,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "@vue/composition-api";
-import { Metadata } from "@/types/metadata";
+import { Metadata } from "@/types";
 import { metadataService } from "@/services/dataService";
 import MetadataSubBox from "@/components/metadata/MetadataSubBox.vue";
 import debounce from "lodash-es/debounce";

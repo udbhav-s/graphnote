@@ -18,15 +18,24 @@
         Load More
       </button>
     </div>
+
+    <div
+      v-if="connections.length === 0"
+      class="container vertical-pad-m has-text-centered"
+    >
+      <router-link :to="{ name: 'CreateConnection' }">
+        Create Connection
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, computed, watch } from "@vue/composition-api";
 import ConnectionPreview from "@/components/connection/ConnectionPreview.vue";
-import { Connection } from "@/types/connection";
+import { Connection, QueryOptions, Workspace } from "@/types";
 import { connectionService } from "@/services/dataService";
-import { QueryOptions } from "@/types/queryOptions";
+import { workspaceStore } from "@/store";
 
 export default defineComponent({
   name: "ConnectionList",
@@ -35,7 +44,7 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const workspaceId = parseInt(root.$route.params.workspaceId);
+    const workspace = computed<Workspace>(workspaceStore.getters.workspace);
     const connections = ref<Connection[]>([]);
     // pagination
     const options: QueryOptions = {
@@ -47,21 +56,22 @@ export default defineComponent({
     // get connections
     const loadConnections = async () => {
       const result = await connectionService.getByWorkspace(
-        workspaceId,
+        workspace.value.id,
         options
       );
-      if ("error" in result) {
-        root.$toasted.error("Error loading connections");
-        throw result.error;
-      } else {
+      if ("success" in result) {
         // add items
         result.data.forEach(con => connections.value.push(con));
         // update pagination
         if (result.data.length < options.limit) hasMoreItems.value = false;
         options.offset += options.limit;
+      } else {
+        root.$toasted.error("Error loading connections: " + result.message);
       }
     };
-    loadConnections();
+    watch(workspace, () => {
+      if (workspace.value.id) loadConnections();
+    });
 
     const deleteConnection = (id: number) => {
       connections.value = connections.value.filter(c => c.id !== id);

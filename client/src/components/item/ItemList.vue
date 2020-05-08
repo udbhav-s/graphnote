@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wide-container">
     <h1 class="title">
       <template v-if="connectedWithItem">
         Connected Items
@@ -21,15 +21,24 @@
         Load More
       </button>
     </div>
+
+    <div
+      v-if="items.length === 0"
+      class="container vertical-pad-m has-text-centered"
+    >
+      <router-link :to="{ name: 'CreateItem' }">
+        Create Item
+      </router-link>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from "@vue/composition-api";
+import { defineComponent, ref, watch, computed } from "@vue/composition-api";
 import ItemPreview from "@/components/item/ItemPreview.vue";
-import { Item } from "@/types/item";
+import { Item, QueryOptions, Workspace } from "@/types";
 import { itemService } from "@/services/dataService";
-import { QueryOptions } from "@/types/queryOptions";
+import { workspaceStore } from "@/store";
 
 export default defineComponent({
   name: "ItemList",
@@ -43,7 +52,7 @@ export default defineComponent({
   },
 
   setup(props, { root }) {
-    const workspaceId = parseInt(root.$route.params.workspaceId);
+    const workspace = computed<Workspace>(workspaceStore.getters.workspace);
     const items = ref<Item[]>([]);
     // pagination
     const options: QueryOptions = {
@@ -52,7 +61,7 @@ export default defineComponent({
     };
     const hasMoreItems = ref<boolean>(true);
 
-    const loadItems = async () => {
+    const loadItems = async (reset?: boolean) => {
       // get connections
       let result;
       if (props.connectedWithItem) {
@@ -60,32 +69,35 @@ export default defineComponent({
           props.connectedWithItem,
           options
         );
-      } else result = await itemService.getByWorkspace(workspaceId, options);
-
-      if ("error" in result) {
-        root.$toasted.error("Error loading items");
-        console.log(result.error);
       } else {
+        result = await itemService.getByWorkspace(workspace.value.id, options);
+      }
+
+      if ("success" in result) {
+        // reset pagination and items
+        if (reset) {
+          options.limit = 20;
+          options.offset = 0;
+          items.value = [];
+        }
+
         // add items
         result.data.forEach(item => items.value.push(item));
+
         // update pagination
         if (result.data.length < options.limit) hasMoreItems.value = false;
         options.offset += options.limit;
+      } else {
+        root.$toasted.error("Error loading items: " + result.message);
       }
     };
 
     // watch for change
-    watch(
-      () => props.connectedWithItem,
-      () => {
-        // reset pagination
-        options.limit = 20;
-        options.offset = 0;
-        // reload items
-        items.value = [];
-        loadItems();
+    watch([() => props.connectedWithItem, workspace], () => {
+      if (workspace.value.id) {
+        loadItems(true);
       }
-    );
+    });
 
     const deleteItem = (id: number) => {
       items.value = items.value.filter(i => i.id !== id);
@@ -100,3 +112,21 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss">
+@import "@/assets/styles/style.scss";
+
+.item-list {
+  @include tablet {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: space-evenly;
+
+    .item-preview-container {
+      width: 20rem;
+    }
+  }
+}
+</style>
