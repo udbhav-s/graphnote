@@ -52,6 +52,9 @@ const routes: Array<RouteConfig> = [
         path: "/",
         name: "Items",
         alias: "items",
+        props: {
+          search: true
+        },
         component: () =>
           import(
             /* webpackChunkName: "itemList" */

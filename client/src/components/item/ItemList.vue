@@ -7,6 +7,15 @@
       <template v-else>Items</template>
     </h1>
 
+    <div v-if="search" class="field has-addons">
+      <div class="control is-expanded">
+        <input v-model="options.search" class="input" type="text" />
+      </div>
+      <div class="control">
+        <button @click="loadItems(true)" class="button">Search</button>
+      </div>
+    </div>
+
     <div class="item-list">
       <item-preview
         v-for="item in items"
@@ -34,7 +43,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch, computed } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  watch,
+  computed,
+  reactive
+} from "@vue/composition-api";
 import ItemPreview from "@/components/item/ItemPreview.vue";
 import { Item, QueryOptions, Workspace } from "@/types";
 import { itemService } from "@/services/dataService";
@@ -45,6 +60,9 @@ export default defineComponent({
   props: {
     connectedWithItem: {
       type: Number as () => number
+    },
+    search: {
+      type: Boolean as () => boolean
     }
   },
   components: {
@@ -55,10 +73,11 @@ export default defineComponent({
     const workspace = computed<Workspace>(workspaceStore.getters.workspace);
     const items = ref<Item[]>([]);
     // pagination
-    const options: QueryOptions = {
+    const options: QueryOptions = reactive({
       limit: 20,
-      offset: 0
-    };
+      offset: 0,
+      search: ""
+    });
     const hasMoreItems = ref<boolean>(true);
 
     const loadItems = async (reset?: boolean) => {
@@ -108,7 +127,8 @@ export default defineComponent({
       items,
       loadItems,
       hasMoreItems,
-      deleteItem
+      deleteItem,
+      options
     };
   }
 });
