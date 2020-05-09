@@ -32,7 +32,7 @@ export class UserController {
     return req.logout();
   }
 
-  @Post('/register')
+  //@Post('/register')
   async register(@Body() body: SignUpDto): Promise<number> {
     // check if name exists
     const user = await this.userService.getByName(body.username);
