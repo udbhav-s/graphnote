@@ -62,6 +62,11 @@ export default defineComponent({
     const hasMoreItems = ref<boolean>(true);
 
     const loadItems = async (reset?: boolean) => {
+      // reset pagination
+      if (reset) {
+        options.limit = 20;
+        options.offset = 0;
+      }
       // get connections
       let result;
       if (props.connectedWithItem) {
@@ -74,12 +79,8 @@ export default defineComponent({
       }
 
       if ("success" in result) {
-        // reset pagination and items
-        if (reset) {
-          options.limit = 20;
-          options.offset = 0;
-          items.value = [];
-        }
+        // reset items
+        if (reset) items.value = [];
 
         // add items
         result.data.forEach(item => items.value.push(item));
