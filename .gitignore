@@ -1,6 +1,6 @@
 /server/.env
 /server/migrateData.ts
-/server/public
+#/server/public
 /server/.vscode
 /client/.vscode
 *.code-workspace
