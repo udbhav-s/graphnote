@@ -26,7 +26,11 @@
     </div>
 
     <div class="field has-text-centered">
-      <button v-if="hasMoreItems" @click="loadItems" class="button is-primary">
+      <button
+        v-if="hasMoreItems"
+        @click="loadItems(false)"
+        class="button is-primary"
+      >
         Load More
       </button>
     </div>
@@ -73,7 +77,7 @@ export default defineComponent({
     const workspace = computed<Workspace>(workspaceStore.getters.workspace);
     const items = ref<Item[]>([]);
     // pagination
-    const options: QueryOptions = reactive({
+    const options = reactive<QueryOptions>({
       limit: 20,
       offset: 0,
       search: ""
