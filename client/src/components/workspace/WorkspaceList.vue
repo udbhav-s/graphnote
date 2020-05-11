@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="workspace-list">
     <workspace-preview
       v-for="workspace in workspaces"
       :key="workspace.id"
@@ -49,3 +49,9 @@ export default defineComponent({
   }
 });
 </script>
+
+<style lang="scss">
+.workspace-list > .box {
+  margin-bottom: 0 !important;
+}
+</style>

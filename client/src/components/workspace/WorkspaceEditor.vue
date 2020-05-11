@@ -57,7 +57,8 @@ import {
   defineComponent,
   reactive,
   computed,
-  watch
+  watch,
+  ref
 } from "@vue/composition-api";
 import { workspaceService } from "@/services/dataService";
 import { workspaceStore, userStore } from "@/store";
@@ -77,8 +78,11 @@ export default defineComponent({
       name: "",
       public: false
     });
+    const submitting = ref<boolean>(false);
     const canSubmit = computed<boolean>(() => {
-      return !!form.name && typeof form.public === "boolean";
+      return (
+        !!form.name && typeof form.public === "boolean" && !submitting.value
+      );
     });
     // watch since component loads before store can load the workspace
     if (props.editMode) {
@@ -100,10 +104,14 @@ export default defineComponent({
     });
 
     const submit = async () => {
+      submitting.value = true;
+
       let result;
       if (props.editMode)
         result = await workspaceService.update(workspace.value.id, form);
       else result = await workspaceService.create(form);
+
+      submitting.value = false;
 
       if ("success" in result) {
         if (props.editMode) {
