@@ -1,4 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import got from 'got';
 import * as metascraperModule from 'metascraper';
 import * as metascraperTitleModule from 'metascraper-title';
@@ -15,6 +16,7 @@ const metascraper = metascraperModule([
 
 @Injectable()
 export class MetadataService {
+  private readonly logger = new Logger(MetadataService.name);
   constructor(@Inject('MetadataModel') private metadataModel: ModelClass<MetadataModel>) {}
 
   async scrape(link: string): Promise<Partial<MetadataModel>> {
@@ -40,5 +42,21 @@ export class MetadataService {
       })
       .returning("*")
       .first();
+  }
+
+  // clear all unreferenced metadata rows periodically
+  @Cron(CronExpression.EVERY_15_MINUTES)
+  async removeUnreferenced() {
+    this.logger.log("CLEARING UNREFERENCED METADATA");
+    const knex = this.metadataModel.knex();
+    return await this.metadataModel
+      .query()
+      .whereNotIn("id",
+        knex("items").select("metadata_id").whereNotNull("metadata_id")
+      )
+      .whereNotIn("id",
+        knex("connections").select("metadata_id").whereNotNull("metadata_id")
+      )
+      .del();
   }
 }

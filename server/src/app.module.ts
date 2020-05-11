@@ -10,6 +10,7 @@ import { ConnectionModule } from './connection/connection.module';
 import { TagModule } from './tag/tag.module';
 import { MetadataModule } from './metadata/metadata.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ScheduleModule } from '@nestjs/schedule';
 import * as path from "path";
 
 @Module({
@@ -17,6 +18,7 @@ import * as path from "path";
     ServeStaticModule.forRoot({
       rootPath: path.join(__dirname, '..', '..', 'public'),
     }),
+    ScheduleModule.forRoot(),
     AuthModule,
     UserModule,
     DatabaseModule,
