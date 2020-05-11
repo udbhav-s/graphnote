@@ -116,6 +116,11 @@ export default defineComponent({
         });
     }
     return next();
+  },
+
+  beforeRouteLeave(to, from, next) {
+    workspaceStore.mutations.setWorkspace({} as Workspace);
+    next();
   }
 });
 </script>
