@@ -1,7 +1,7 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3205f8736a434916e821",
-    "url": "/css/app.51a193ae.css"
+    "revision": "ee37f59403d59763e350",
+    "url": "/css/app.64eb5326.css"
   },
   {
     "revision": "c6703a81a01a4f7ad02e",
@@ -28,24 +28,24 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/itemEditor.1a3f1748.css"
   },
   {
-    "revision": "3021113d15dc7df6bc22",
+    "revision": "b867f88b8e70e76e6d43",
     "url": "/css/itemList.c295f418.css"
   },
   {
-    "revision": "7ecb06c69959a6cb9125",
+    "revision": "5ec20dd952c6591bd974",
     "url": "/css/workspaceSettings.a80ac1d6.css"
   },
   {
-    "revision": "763db88243891ede292d52457fcf5780",
+    "revision": "2888e4d60daa83ba4a32a863967b60bc",
     "url": "/index.html"
   },
   {
-    "revision": "9000d122ddee120822c5",
-    "url": "/js/about.af0f2154.js"
+    "revision": "fc06fed3d7a006a9fa2e",
+    "url": "/js/about.83601e6c.js"
   },
   {
-    "revision": "3205f8736a434916e821",
-    "url": "/js/app.431d9e91.js"
+    "revision": "ee37f59403d59763e350",
+    "url": "/js/app.2927ec49.js"
   },
   {
     "revision": "efff55ff0572740bd5f6",
@@ -68,8 +68,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/connectionList.194eb962.js"
   },
   {
-    "revision": "0a52617c6c0b6064569a",
-    "url": "/js/createWorkspace.fb2c4777.js"
+    "revision": "45068ddf08b4ea272aa1",
+    "url": "/js/createWorkspace.1c4f8505.js"
   },
   {
     "revision": "dd22572c12b763769bbb",
@@ -88,8 +88,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/itemEditor.e30098c9.js"
   },
   {
-    "revision": "3021113d15dc7df6bc22",
-    "url": "/js/itemList.40e59e07.js"
+    "revision": "b867f88b8e70e76e6d43",
+    "url": "/js/itemList.60593705.js"
   },
   {
     "revision": "aa9ba6a3121036197422",
@@ -100,12 +100,12 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/register.9b4c0e5e.js"
   },
   {
-    "revision": "d1919611c53a67638514",
-    "url": "/js/workspace.3a5fa4e8.js"
+    "revision": "e9f1eb12d3c3e940d79f",
+    "url": "/js/workspace.dd2b55d4.js"
   },
   {
-    "revision": "7ecb06c69959a6cb9125",
-    "url": "/js/workspaceSettings.1712b0d1.js"
+    "revision": "5ec20dd952c6591bd974",
+    "url": "/js/workspaceSettings.0443acc0.js"
   },
   {
     "revision": "8eff00fb23e5046e8587fb699e79e093",
