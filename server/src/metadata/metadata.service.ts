@@ -1,6 +1,7 @@
 import { Injectable, Inject, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import got from 'got';
+import * as normalizeUrl from 'normalize-url';
 import * as metascraperModule from 'metascraper';
 import * as metascraperTitleModule from 'metascraper-title';
 import * as metascraperDescriptionModule from 'metascraper-description';
@@ -20,6 +21,7 @@ export class MetadataService {
   constructor(@Inject('MetadataModel') private metadataModel: ModelClass<MetadataModel>) {}
 
   async scrape(link: string): Promise<Partial<MetadataModel>> {
+    link = normalizeUrl(link, { forceHttps: true });
     const { body: html, url } = await got(link);
     return await metascraper({ html, url });
   }
