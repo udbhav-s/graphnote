@@ -1,8 +1,6 @@
 import Vue from "vue";
 import { userService, workspaceService } from "@/services/dataService";
-import { Credentials } from "@/types/credentials";
-import { User } from "@/types/user";
-import { Workspace } from "@/types/workspace";
+import { User, Credentials, Workspace } from "@/types";
 
 const store = Vue.observable({
   user: {} as User,
