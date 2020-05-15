@@ -47,6 +47,14 @@
         <a v-if="isAuthenticated" class="navbar-item" @click="logout">
           Log out
         </a>
+        <router-link
+          v-else
+          class="navbar-item"
+          :to="{ name: 'Login' }"
+          @click.native="isActive = false"
+        >
+          Login
+        </router-link>
       </div>
     </div>
   </header>
