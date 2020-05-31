@@ -88,8 +88,10 @@ export default defineComponent({
             root.$toasted.error("Item does not belong to workspace");
             root.$router.go(-1);
           } else {
-            const { name, metadata: { url } = { url: "" }, body } = result.data;
-            form.value = { name, url, body };
+            const { name, metadata, body } = result.data;
+            form.value.name = name;
+            form.value.body = body;
+            if (metadata) form.value.url = metadata.url;
           }
         } else {
           root.$toasted.error("Error loading item: " + result.message);
