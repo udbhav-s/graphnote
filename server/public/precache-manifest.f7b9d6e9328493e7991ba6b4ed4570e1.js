@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ee37f59403d59763e350",
+    "revision": "d651be39a8981502f0b2",
     "url": "/css/app.64eb5326.css"
   },
   {
@@ -8,7 +8,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/connectionEditor~connectionList~graphView~item~itemList.1aa6f2e9.css"
   },
   {
-    "revision": "c89a71ffd7ba65d201da",
+    "revision": "2ec51f1244195b6acdb4",
     "url": "/css/connectionEditor~itemEditor.a2435f9a.css"
   },
   {
@@ -36,16 +36,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/css/workspaceSettings.a80ac1d6.css"
   },
   {
-    "revision": "2888e4d60daa83ba4a32a863967b60bc",
+    "revision": "76146e4304b9e511fcd3ba73c27dc171",
     "url": "/index.html"
   },
   {
-    "revision": "fc06fed3d7a006a9fa2e",
-    "url": "/js/about.83601e6c.js"
+    "revision": "8baf13ad6657b9799ed6",
+    "url": "/js/about.c5b54e6e.js"
   },
   {
-    "revision": "ee37f59403d59763e350",
-    "url": "/js/app.2927ec49.js"
+    "revision": "d651be39a8981502f0b2",
+    "url": "/js/app.0ca7a5e5.js"
   },
   {
     "revision": "efff55ff0572740bd5f6",
@@ -60,8 +60,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/js/connectionEditor~connectionList~graphView~item~itemList.83eeb35d.js"
   },
   {
-    "revision": "c89a71ffd7ba65d201da",
-    "url": "/js/connectionEditor~itemEditor.699ee625.js"
+    "revision": "2ec51f1244195b6acdb4",
+    "url": "/js/connectionEditor~itemEditor.a6906573.js"
   },
   {
     "revision": "57948c1f0376edfa8abc",
