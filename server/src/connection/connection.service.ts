@@ -62,6 +62,10 @@ export class ConnectionService {
     id: number,
     body: ConnectionCreateDto,
   ): Promise<ConnectionModel> {
+    // remove metadata if no url
+    if (!body.url) {
+      body.metadataId = null;
+    }
     return await this.connectionModel
       .query()
       .upsertGraphAndFetch(
