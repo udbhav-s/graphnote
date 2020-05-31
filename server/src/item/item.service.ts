@@ -38,10 +38,6 @@ export class ItemService {
   }
 
   async update(id: number, item: ItemCreateDto): Promise<ItemModel> {
-    // if the url is not specified unset the metadata
-    if (!item.url) {
-      item.metadataId = null;
-    }
     return await this.itemModel
       .query()
       .where({ id })

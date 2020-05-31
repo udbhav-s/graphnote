@@ -162,7 +162,7 @@ export class ConnectionController {
       delete body.url;
       // set metadata id
       body.metadataId = metadata.id;
-    }
+    } else body.metadataId = null;
 
     return await this.connectionService.update(id, body);
   }

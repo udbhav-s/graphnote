@@ -150,7 +150,7 @@ export class ItemController {
       delete body.url;
       // set metadata id
       body.metadataId = metadata.id;
-    }
+    } else body.metadataId = null;
 
     return await this.itemService.update(id, body);
   }
