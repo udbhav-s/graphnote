@@ -57,11 +57,18 @@ export const workspaceStore = {
   },
 
   mutations: {
+    setId(id: number) {
+      store.workspace.id = id;
+    },
+
     setWorkspace(workspace: Workspace) {
       store.workspace = workspace;
     },
 
     async loadWorkspace(id: number) {
+      // set id so the other things can reference before workspace is loaded
+      this.setId(id);
+      // load the workspace
       const result = await workspaceService.getById(id);
       if ("success" in result) this.setWorkspace(result.data);
       else throw result;
