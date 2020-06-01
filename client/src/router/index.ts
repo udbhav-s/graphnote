@@ -146,7 +146,11 @@ const routes: Array<RouteConfig> = [
             /* webpackChunkName: "graphView" */
 
             "@/components/graph/GraphView.vue"
-          )
+          ),
+        props: route => ({
+          all: "all" in route.query,
+          itemId: parseInt(route.query.itemId as string)
+        })
       },
       {
         path: "settings",

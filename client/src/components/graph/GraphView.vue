@@ -3,28 +3,27 @@
     <h1 class="title wide-container">Graph</h1>
 
     <div class="graph-input">
-      <item-picker
-        class="item-picker"
-        v-model="item"
-        @input="graphAll = false"
-      />
-      <button @click="graphAll = true" class="button is-primary">
+      <item-picker class="item-picker" :value="{}" @input="itemSearched" />
+      <button
+        @click="$router.push({ name: 'Graph', query: { all: 'true' } })"
+        class="button is-primary"
+      >
         Graph All
       </button>
     </div>
     <div class="graph-view">
       <div class="network-panel">
         <graph
-          v-if="(item && item.id) || graphAll"
-          :itemId="item.id"
+          v-if="itemId || graphAll"
+          :itemId="itemId"
           :graphAll="graphAll"
           @item-selected="itemSelected"
         />
       </div>
       <div class="item-panel">
         <item
-          v-if="selectedItemId || (item && item.id)"
-          :id="selectedItemId || item.id"
+          v-if="itemId || selectedItemId"
+          :id="itemId || selectedItemId"
           :graph="false"
         />
       </div>
@@ -33,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "@vue/composition-api";
+import { defineComponent, ref, watch } from "@vue/composition-api";
 import Graph from "@/components/graph/Graph.vue";
 import ItemPage from "@/components/item/Item.vue";
 import ItemPicker from "@/components/item/ItemPicker.vue";
@@ -41,24 +40,48 @@ import { Item } from "@/types";
 
 export default defineComponent({
   name: "GraphView",
+  props: {
+    all: {
+      type: Boolean as () => boolean
+    },
+    itemId: {
+      type: Number as () => number
+    }
+  },
   components: {
     Graph,
     Item: ItemPage,
     ItemPicker
   },
 
-  setup() {
+  setup(props, { root }) {
     const graphAll = ref<boolean>(false);
-    const item = ref<Item>({});
-    const selectedItemId = ref<number>(null);
+    watch(
+      () => props.all,
+      val => {
+        graphAll.value = !!val;
+      }
+    );
 
+    const itemSearched = (item: Item) => {
+      if (item && item.id) {
+        root.$router.push({
+          name: "Graph",
+          query: {
+            itemId: item.id.toString()
+          }
+        });
+      }
+    };
+
+    const selectedItemId = ref<number>(null);
     const itemSelected = (itm: Item) => {
       selectedItemId.value = itm.id;
     };
 
     return {
       selectedItemId,
-      item,
+      itemSearched,
       itemSelected,
       graphAll
     };
