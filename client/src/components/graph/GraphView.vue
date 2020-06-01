@@ -1,6 +1,7 @@
 <template>
   <div class="graph-page">
     <h1 class="title wide-container">Graph</h1>
+
     <div class="graph-input">
       <item-picker
         class="item-picker"

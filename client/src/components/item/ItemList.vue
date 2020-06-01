@@ -6,6 +6,7 @@
       </template>
       <template v-else>Items</template>
     </h1>
+    <hr />
 
     <div v-if="search" class="field has-addons">
       <div class="control is-expanded">

@@ -1,21 +1,24 @@
 <template>
   <div v-if="item" class="wide-container section item-page">
     <section>
-      <h1 class="title">{{ item.name }}</h1>
-      <div v-if="isAuthenticated" class="options field">
-        <router-link
-          :to="{
-            name: 'EditItem',
-            params: { id: item.id }
-          }"
-          class="button is-small"
-        >
-          Edit
-        </router-link>
-        <button @click="deleteItem" class="options button is-small is-danger">
-          Delete
-        </button>
+      <div class="title-bar">
+        <h1 class="title">{{ item.name }}</h1>
+        <div v-if="isAuthenticated" class="options field">
+          <router-link
+            :to="{
+              name: 'EditItem',
+              params: { id: item.id }
+            }"
+            class="button is-small"
+          >
+            Edit
+          </router-link>
+          <button @click="deleteItem" class="options button is-small is-danger">
+            Delete
+          </button>
+        </div>
       </div>
+      <hr />
 
       <div v-if="item.body" v-html="item.body" class="content"></div>
 
@@ -123,11 +126,28 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import "bulmaswatch/cosmo/bulmaswatch.scss";
+
 .item-page {
+  padding-left: 0;
+  padding-right: 0;
+
   .network-container {
     max-width: 50rem;
     height: 30rem;
     margin: auto;
+  }
+}
+
+.title-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+
+  h1.title,
+  .title:not(:last-child) {
+    margin-bottom: 0;
   }
 }
 
@@ -137,14 +157,23 @@ export default defineComponent({
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-evenly;
+  background-color: $background;
+
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 
   .image {
     max-width: 20rem;
   }
 
   .preview-body {
-    padding: 1rem;
-    max-width: 40rem;
+    padding: 0.8rem;
+    width: 100%;
+    overflow-wrap: break-word;
+
+    @include tablet {
+      max-width: 40rem;
+    }
   }
 }
 </style>
