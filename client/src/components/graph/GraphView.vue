@@ -25,6 +25,7 @@
           v-if="itemId || selectedItemId"
           :id="itemId || selectedItemId"
           :graph="false"
+          @item-deleted="itemDeleted"
         />
         <div class="blank" v-else>
           <div>No item selected</div>
@@ -39,6 +40,7 @@ import { defineComponent, ref, watch } from "@vue/composition-api";
 import Graph from "@/components/graph/Graph.vue";
 import ItemPage from "@/components/item/Item.vue";
 import ItemPicker from "@/components/item/ItemPicker.vue";
+import GraphEventBus from "@/components/graph/GraphEventBus";
 import { Item } from "@/types";
 
 export default defineComponent({
@@ -78,14 +80,21 @@ export default defineComponent({
     };
 
     const selectedItemId = ref<number>(null);
-    const itemSelected = (itm: Item) => {
-      selectedItemId.value = itm.id;
+    const itemSelected = (item: Item) => {
+      selectedItemId.value = item.id;
+    };
+
+    const itemDeleted = (id: number) => {
+      // emit event on bus
+      GraphEventBus.$emit("item-deleted", id);
+      if (selectedItemId.value === id) selectedItemId.value = null;
     };
 
     return {
       selectedItemId,
       itemSearched,
       itemSelected,
+      itemDeleted,
       graphAll
     };
   }

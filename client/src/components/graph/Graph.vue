@@ -27,6 +27,7 @@ import * as vis from "vis-network/standalone";
 import { connectionService } from "@/services/dataService";
 import { Item, Connection, Workspace } from "@/types";
 import { workspaceStore } from "@/store";
+import GraphEventBus from "@/components/graph/GraphEventBus";
 
 type Node = vis.Node & { item: Item };
 type Edge = vis.Edge & { connection: Connection };
@@ -166,6 +167,18 @@ export default defineComponent({
         }
       });
     };
+
+    // item deleted
+    GraphEventBus.$on("item-deleted", (id: number) => {
+      // remove connections with items
+      edges.remove(
+        edges.get({
+          filter: edge => edge.from === id || edge.to === id
+        })
+      );
+      // remove node
+      nodes.remove(id);
+    });
 
     onMounted(() => {
       watch(dataLoaded, loaded => {
