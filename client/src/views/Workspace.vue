@@ -64,7 +64,9 @@
       </div>
 
       <div>
-        <router-view class="vertical-pad" />
+        <transition name="fade" mode="out-in">
+          <router-view class="vertical-pad" />
+        </transition>
       </div>
     </div>
   </section>
