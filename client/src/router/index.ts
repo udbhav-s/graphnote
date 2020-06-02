@@ -91,7 +91,8 @@ const routes: Array<RouteConfig> = [
         path: "item/:itemId",
         name: "Item",
         props: route => ({
-          id: parseInt(route.params.itemId)
+          id: parseInt(route.params.itemId),
+          deleteRedirect: true
         }),
         component: () =>
           import(

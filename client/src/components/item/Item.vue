@@ -79,6 +79,9 @@ export default defineComponent({
     },
     graph: {
       type: Boolean as () => boolean
+    },
+    deleteRedirect: {
+      type: Boolean as () => boolean
     }
   },
   components: {
@@ -108,7 +111,7 @@ export default defineComponent({
           // emit event
           emit("item-deleted", item.value.id);
           // redirect
-          root.$router.push({ name: "Items" });
+          if (props.deleteRedirect) root.$router.push({ name: "Items" });
           // toast
           root.$toasted.success("Item deleted");
         } else root.$toasted.error("Error deleting item: " + result.message);
