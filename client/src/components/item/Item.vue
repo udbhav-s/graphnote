@@ -86,7 +86,7 @@ export default defineComponent({
     Graph
   },
 
-  setup(props, { root }) {
+  setup(props, { root, emit }) {
     const isAuthenticated = computed<boolean>(
       userStore.getters.isAuthenticated
     );
@@ -105,6 +105,9 @@ export default defineComponent({
         const result = await itemService.del(item.value.id);
 
         if ("success" in result) {
+          // emit event
+          emit("item-deleted", item.value.id);
+          // redirect
           root.$router.push({ name: "Items" });
           // toast
           root.$toasted.success("Item deleted");
