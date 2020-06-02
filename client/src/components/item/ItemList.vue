@@ -22,7 +22,7 @@
         v-for="item in items"
         :key="item.id"
         :item="item"
-        @item-deleted="deleteItem"
+        @connection-deleted="removeItem"
       />
     </div>
 
@@ -74,7 +74,7 @@ export default defineComponent({
     ItemPreview
   },
 
-  setup(props, { root }) {
+  setup(props, { root, emit }) {
     const workspace = computed<Workspace>(workspaceStore.getters.workspace);
     const items = ref<Item[]>([]);
     // pagination
@@ -124,7 +124,8 @@ export default defineComponent({
       }
     });
 
-    const deleteItem = (id: number) => {
+    const removeItem = (id: number) => {
+      emit("connection-deleted", id);
       items.value = items.value.filter(i => i.id !== id);
     };
 
@@ -132,7 +133,7 @@ export default defineComponent({
       items,
       loadItems,
       hasMoreItems,
-      deleteItem,
+      removeItem,
       options
     };
   }

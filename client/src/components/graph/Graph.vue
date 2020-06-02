@@ -180,6 +180,16 @@ export default defineComponent({
       nodes.remove(id);
     });
 
+    GraphEventBus.$on("connection-deleted", (id1: number, id2: number) => {
+      edges.remove(
+        edges.get({
+          filter: edge =>
+            (edge.from === id1 && edge.to === id2) ||
+            (edge.from === id2 && edge.to === id1)
+        })
+      );
+    });
+
     onMounted(() => {
       watch(dataLoaded, loaded => {
         if (loaded) createNetwork();

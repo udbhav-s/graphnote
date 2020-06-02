@@ -26,6 +26,7 @@
           :id="itemId || selectedItemId"
           :graph="false"
           @item-deleted="itemDeleted"
+          @connection-deleted="connectionDeleted"
         />
         <div class="blank" v-else>
           <div>No item selected</div>
@@ -90,11 +91,16 @@ export default defineComponent({
       if (selectedItemId.value === id) selectedItemId.value = null;
     };
 
+    const connectionDeleted = (item1Id: number, item2Id: number) => {
+      GraphEventBus.$emit("connection-deleted", item1Id, item2Id);
+    };
+
     return {
       selectedItemId,
       itemSearched,
       itemSelected,
       itemDeleted,
+      connectionDeleted,
       graphAll
     };
   }

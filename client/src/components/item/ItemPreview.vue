@@ -4,7 +4,7 @@
       v-if="item.connection"
       :connection="item.connection"
       :workspaceId="item.workspaceId"
-      @connection-deleted="$emit('item-deleted', item.id)"
+      @connection-deleted="$emit('connection-deleted', item.id)"
     />
 
     <router-link

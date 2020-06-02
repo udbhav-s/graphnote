@@ -40,7 +40,10 @@
     </section>
 
     <section class="vertical-pad">
-      <item-list :connectedWithItem="item.id" />
+      <item-list
+        :connectedWithItem="item.id"
+        @connection-deleted="connectionDeleted"
+      />
     </section>
 
     <section v-if="graph">
@@ -118,6 +121,12 @@ export default defineComponent({
       }
     };
 
+    const connectionDeleted = (id: number) => {
+      if (item.value?.id) {
+        emit("connection-deleted", item.value.id, id);
+      }
+    };
+
     const loadGraph = ref<boolean>(false);
 
     return {
@@ -125,7 +134,8 @@ export default defineComponent({
       loadItem,
       deleteItem,
       loadGraph,
-      isAuthenticated
+      isAuthenticated,
+      connectionDeleted
     };
   }
 });
