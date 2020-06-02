@@ -2,7 +2,7 @@
   <div v-if="connection" class="connection-preview">
     <connection-header-box
       :connection="connection"
-      @deleteConnection="deleteConnection"
+      @connection-deleted="deleteConnection"
     />
 
     <div class="items">

@@ -55,12 +55,14 @@ export default defineComponent({
     const hasMoreItems = ref<boolean>(true);
 
     // get connections
-    const loadConnections = async () => {
+    const loadConnections = async (reset?: boolean) => {
       const result = await connectionService.getByWorkspace(
         workspace.value.id,
         options
       );
       if ("success" in result) {
+        // reset array
+        if (reset) connections.value = [];
         // add items
         result.data.forEach(con => connections.value.push(con));
         // update pagination
@@ -71,7 +73,7 @@ export default defineComponent({
       }
     };
     watch(workspace, () => {
-      if (workspace.value.id) loadConnections();
+      if (workspace.value.id) loadConnections(true);
     });
 
     const deleteConnection = (id: number) => {
