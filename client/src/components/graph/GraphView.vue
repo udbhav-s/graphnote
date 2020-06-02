@@ -26,6 +26,9 @@
           :id="itemId || selectedItemId"
           :graph="false"
         />
+        <div class="blank" v-else>
+          <div>No item selected</div>
+        </div>
       </div>
     </div>
   </div>
@@ -128,6 +131,14 @@ export default defineComponent({
     margin-top: 0;
     margin-bottom: 0;
     border-bottom: none;
+
+    .blank {
+      background: $background;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   @media only screen and (orientation: landscape) {
