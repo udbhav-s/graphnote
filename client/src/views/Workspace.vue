@@ -12,26 +12,42 @@
           <nav class="tabs is-boxed">
             <div class="container">
               <ul>
-                <li :class="[$route.name == 'Items' ? 'is-active' : null]">
+                <li
+                  :class="[
+                    $route.name == 'Items' ? 'is-active has-text-primary' : null
+                  ]"
+                >
                   <router-link :to="{ name: 'Items' }">
                     Items
                   </router-link>
                 </li>
                 <li
-                  :class="[$route.name == 'Connections' ? 'is-active' : null]"
+                  :class="[
+                    $route.name == 'Connections'
+                      ? 'is-active has-text-primary'
+                      : null
+                  ]"
                 >
                   <router-link :to="{ name: 'Connections' }">
                     Connections
                   </router-link>
                 </li>
-                <li :class="[$route.name == 'Graph' ? 'is-active' : null]">
+                <li
+                  :class="[
+                    $route.name == 'Graph' ? 'is-active has-text-primary' : null
+                  ]"
+                >
                   <router-link :to="{ name: 'Graph' }">
                     Graph
                   </router-link>
                 </li>
                 <li
                   v-if="isAuthenticated"
-                  :class="[$route.name == 'CreateItem' ? 'is-active' : null]"
+                  :class="[
+                    $route.name == 'CreateItem'
+                      ? 'is-active has-text-primary'
+                      : null
+                  ]"
                 >
                   <router-link :to="{ name: 'CreateItem' }">
                     New Item
@@ -40,7 +56,9 @@
                 <li
                   v-if="isAuthenticated"
                   :class="[
-                    $route.name == 'CreateConnection' ? 'is-active' : null
+                    $route.name == 'CreateConnection'
+                      ? 'is-active has-text-primary'
+                      : null
                   ]"
                 >
                   <router-link :to="{ name: 'CreateConnection' }">
@@ -50,7 +68,9 @@
                 <li
                   v-if="isAuthenticated"
                   :class="[
-                    $route.name == 'WorkspaceSettings' ? 'is-active' : null
+                    $route.name == 'WorkspaceSettings'
+                      ? 'is-active has-text-primary'
+                      : null
                   ]"
                 >
                   <router-link :to="{ name: 'WorkspaceSettings' }">
