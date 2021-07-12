@@ -3,7 +3,8 @@
 ![Image 1](./images/image1.jpg)
 ![Image 2](./images/image2.jpg)
 
-[Demo Graph](https://graphnote.udbhavs.com/workspace/7/graph?all=true)
+[Demo Graph](https://graphnote.udbhavs.com/workspace/7/graph?all=true)  
+
 [Large dataset with hundreds of nodes (may take a while to load)](https://graphnote.udbhavs.com/workspace/1/)
 
 ## Installation
