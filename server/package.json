@@ -43,7 +43,7 @@
     "dotenv": "^8.2.0",
     "express-session": "^1.17.0",
     "got": "^10.7.0",
-    "knex": "^0.20.13",
+    "knex": "^2.4.0",
     "metascraper": "^5.11.9",
     "metascraper-description": "^5.11.9",
     "metascraper-image": "^5.11.9",
